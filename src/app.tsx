@@ -1,51 +1,96 @@
 import React, { useState } from "react"
-import { ScrollView, Text, View } from "react-native"
+import { ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { styles } from './styles'
 import { User } from './types/user.types'
 
 const TEMP_USER: User ={
     id: '',
     username: 'Zack',
+    level: 1,
+    heatlh: 30,
     stats: {
-        chest: 1,
-        bicep: 1,
-    tricep: 1,
-    delts: 1,
-    lats: 1,
-    traps: 1,
-    quads: 1,
-    glutes: 1,
-    calfs: 1,
-    hamstring: 1,
-    abs: 1,
-    obleques: 1
+        chest: 15,
+        bicep: 17,
+        tricep: 1,
+        delts: 37,
+        lats: 7,
+        traps: 19,
+        quads: 1,
+        glutes: 7,
+        calfs: 6,
+        hamstring: 1,
+        abs: 1,
+        obleques: 1
     }
 }
 
 const App = () => {
     const [curUser, setUser] = useState<User>(TEMP_USER)
+    const [curView, setView] = useState<number>(0)
 
-    return <Stats curUser={curUser}/>
+    switch(curView){
+        case 0:
+            return <Stats curUser={curUser} setCurView={setView}/>
+        case 1: 
+            return <WorkoutView curUser={curUser} setCurUser={setUser}/>
+    }
 }
+    
 
-export const Stats=({curUser}: {curUser : User})=>{
+export const Stats=({curUser, setCurView}: {curUser : User, setCurView: (curView: number) =>  void})=>{
     return(
-        <View>
-            <Text style={{
-                color: 'black',
-                fontSize: 24,
-                fontWeight: 'bold'
-            }}>{curUser.username}</Text>
-            <ScrollView style={{
-                backgroundColor: ''
-            }}>
+        <View style={{
+            flex: 1,
+            backgroundColor: '#0f172a',
+        }}>
+            <View style={{
+                flexDirection: 'row'}}>
+                <Text style={styles.nameTxt}>{curUser.username}</Text>
+                <Text style={styles.nameTxt}>HP: {curUser.heatlh}</Text>
+            </View>
+
+            <ScrollView style={styles.statsInfo}>
                 {Object.entries(curUser.stats).map(([muscleName, lvl]) => {
                     return(
                     <View key={muscleName}>
-                        <Text>{muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}: {lvl}</Text>
+                        <Text style={
+                            styles.statsTxt
+                        }>{muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}: {lvl}</Text>
                     </View>
                     )
                 })}
             </ScrollView>
+            <View style={styles.tabs}>
+                <TouchableOpacity 
+                    style={styles.tabsButton}
+                    onPress={() => setCurView(0)}
+                >
+                    <Text style={styles.tabsButtonTxt}>Stats</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={styles.tabsButton}
+                    onPress = {() => setCurView(1)}>
+                    <Text style={styles.tabsButtonTxt} >Workout</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={styles.tabsButton}
+                    onPress = {() => setCurView(2)}>
+                    <Text style={styles.tabsButtonTxt} >Settings</Text>
+                </TouchableOpacity>
+
+            </View>
+        </View>
+    )
+}
+
+export const WorkoutView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
+    return(
+        <View>
+            <Text
+            style={{
+                fontSize: 16
+            }}
+            >Yer nigga</Text>
         </View>
     )
 }

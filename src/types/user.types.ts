@@ -17,4 +17,6 @@ export interface User {
     id: string;
     username: string;
     stats: MuscleGroup;
+    level: number,
+    heatlh: number
 }

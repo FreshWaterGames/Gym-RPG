@@ -4,7 +4,7 @@ import App from "../src/app";
 
 export default function Index() {
   return (
-<View>
+<View style={{flex:1}}>
     <App/>
     </View>
   );

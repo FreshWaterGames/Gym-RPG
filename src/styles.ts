@@ -17,6 +17,8 @@ export const styles = StyleSheet.create({
     statsInfo: {
         flex: 1,
         padding: 25,
+        borderRadius: 4,
+        borderColor: 'white'
     },
 
     statsTxt: {

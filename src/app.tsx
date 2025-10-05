@@ -28,15 +28,45 @@ const App = () => {
     const [curUser, setUser] = useState<User>(TEMP_USER)
     const [curView, setView] = useState<number>(0)
 
-    switch(curView){
-        case 0:
-            return <Stats curUser={curUser} setCurView={setView}/>
-        case 1: 
-            return <WorkoutView curUser={curUser} setCurUser={setUser}/>
+    const renderView = () => {
+        switch(curView){
+            case 0:
+                return <Stats curUser={curUser} setCurView={setView}/>
+            case 1: 
+                return <WorkoutView curUser={curUser} setCurUser={setUser}/>
+        }
     }
+
+    return(
+        <View style={{flex: 1}}>
+            {renderView()}
+            <TabBar setCurView = {setView}/>
+        </View>
+    )
 }
     
-export const tabBar = { }
+export const TabBar = ({setCurView} : {setCurView: (curView: number) => void}) => {
+    return (
+        <View style={styles.tabs}>
+            <TouchableOpacity 
+                    style={styles.tabsButton}
+                    onPress={() => setCurView(0)}
+                >
+                    <Text style={styles.tabsButtonTxt}>Stats</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={styles.tabsButton}
+                    onPress = {() => setCurView(1)}>
+                    <Text style={styles.tabsButtonTxt} >Workout</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={styles.tabsButton}
+                    onPress = {() => setCurView(2)}>
+                    <Text style={styles.tabsButtonTxt} >Settings</Text>
+                </TouchableOpacity>
+        </View>
+    )
+}
 export const Stats=({curUser, setCurView}: {curUser : User, setCurView: (curView: number) =>  void})=>{
     return(
         <View style={{
@@ -60,25 +90,6 @@ export const Stats=({curUser, setCurView}: {curUser : User, setCurView: (curView
                     )
                 })}
             </ScrollView>
-            <View style={styles.tabs}>
-                <TouchableOpacity 
-                    style={styles.tabsButton}
-                    onPress={() => setCurView(0)}
-                >
-                    <Text style={styles.tabsButtonTxt}>Stats</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    style={styles.tabsButton}
-                    onPress = {() => setCurView(1)}>
-                    <Text style={styles.tabsButtonTxt} >Workout</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                    style={styles.tabsButton}
-                    onPress = {() => setCurView(2)}>
-                    <Text style={styles.tabsButtonTxt} >Settings</Text>
-                </TouchableOpacity>
-
-            </View>
         </View>
     )
 }

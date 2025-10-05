@@ -36,7 +36,7 @@ const App = () => {
     }
 }
     
-
+export const tabBar = { }
 export const Stats=({curUser, setCurView}: {curUser : User, setCurView: (curView: number) =>  void})=>{
     return(
         <View style={{

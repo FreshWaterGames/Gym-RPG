@@ -1,8 +1,11 @@
 import React, { useState } from "react"
-import { ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { Text, TouchableOpacity, View } from "react-native"
+import { User } from './Classes/user.types'
 import { styles } from './styles'
-import { User } from './types/user.types'
+import { Stats } from './Views/StatsView'
 
+
+//Test User
 const TEMP_USER: User ={
     id: '',
     username: 'Zack',
@@ -67,33 +70,6 @@ export const TabBar = ({setCurView} : {setCurView: (curView: number) => void}) =
         </View>
     )
 }
-export const Stats=({curUser, setCurView}: {curUser : User, setCurView: (curView: number) =>  void})=>{
-    return(
-        <View style={{
-            flex: 1,
-            backgroundColor: '#0f172a',
-        }}>
-            <View style={{
-                flexDirection: 'row'}}>
-                <Text style={styles.nameTxt}>{curUser.username}</Text>
-                <Text style={styles.nameTxt}>HP: {curUser.heatlh}</Text>
-            </View>
-
-            <ScrollView style={styles.statsInfo}>
-                {Object.entries(curUser.stats).map(([muscleName, lvl]) => {
-                    return(
-                    <View key={muscleName}>
-                        <Text style={
-                            styles.statsTxt
-                        }>{muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}: {lvl}</Text>
-                    </View>
-                    )
-                })}
-            </ScrollView>
-        </View>
-    )
-}
-
 export const WorkoutView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
     return(
         <View>

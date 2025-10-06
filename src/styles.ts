@@ -1,10 +1,14 @@
 import { StyleSheet } from 'react-native';
 
+
+//#007AFF Light Blue Color
+//#0f172a Dark Blue
+
 export const styles = StyleSheet.create({
     userInfo: {
         flex: 1,
         flexDirection: 'column',
-        color: 'white',
+        color: 'black',
     },
 
     nameTxt: {
@@ -17,21 +21,27 @@ export const styles = StyleSheet.create({
     statsInfo: {
         flex: 1,
         padding: 25,
-        borderRadius: 4,
-        borderColor: 'white'
+        borderRadius: 20,
+        borderWidth: 16,
+        borderColor: '#0f172a',
+        borderBlockColor: '#0f172a',
+        backgroundColor: 'white'
     },
 
     statsTxt: {
         fontSize: 24,
         padding: 5,
         fontWeight: 'bold',
-        color: 'white'
+        color: '#0f172a'
     },
     
     tabs: {
+        backgroundColor: '#0f172a',
         flexDirection: "row",
         alignContent: 'center',
         justifyContent: 'center',
+        paddingBottom: 5,
+        borderColor: 'white'
     },
     
     tabsButton: {
@@ -47,6 +57,22 @@ export const styles = StyleSheet.create({
     tabsButtonTxt: {
         color: 'white',
         fontSize: 18
-    }
+    },
 
+    pfp: {
+        width: 100, 
+        height: 100 ,      
+        borderRadius: 50, 
+        borderWidth: 2,       
+        borderColor: 'white'
+    },
+
+    xpBar:{
+        borderWidth: 1,
+        borderColor: 'white',
+        marginLeft: 10,
+        height: 25,
+        width: '100%',        // Full width of parent
+        maxWidth: 300,
+    }
 });

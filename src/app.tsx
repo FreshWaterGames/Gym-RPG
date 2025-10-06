@@ -1,9 +1,11 @@
 import React, { useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
+import { User } from './Classes/user.types'
 import { styles } from './styles'
-import { User } from './types/user.types'
 import { Stats } from './Views/StatsView'
 
+
+//Test User
 const TEMP_USER: User ={
     id: '',
     username: 'Zack',

@@ -1,10 +1,12 @@
 import { Image } from 'expo-image'
-import React from "react"
+import React, { useState } from "react"
 import { ScrollView, Text, View } from "react-native"
+import { User } from '../Classes/user.types'
 import { styles } from '../styles'
-import { User } from '../types/user.types'
 
 export const Stats=({curUser, setCurView}: {curUser : User, setCurView: (curView: number) =>  void})=>{
+    //Test Percentage 
+    const [viewPercent, setPercent] = useState(65)
     return(
         <View style={{
             flex: 1,
@@ -26,7 +28,12 @@ export const Stats=({curUser, setCurView}: {curUser : User, setCurView: (curView
                         <Text style={styles.nameTxt}>HP: {curUser.heatlh}</Text>
                     </View>
                     <View style={styles.xpBar}>
-
+                            <View style={{
+                                backgroundColor: 'orange',
+                                width: `${viewPercent}%`,
+                                height: '100%'
+                            }}
+                            ></View>
                     </View>
                 </View>
             </View>

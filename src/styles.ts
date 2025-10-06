@@ -36,6 +36,13 @@ export const styles = StyleSheet.create({
     },
     
     tabs: {
+<<<<<<< Updated upstream
+=======
+        position: 'absolute',
+        bottom: 15,
+        left: 0,
+        right: 0,
+>>>>>>> Stashed changes
         backgroundColor: '#0f172a',
         flexDirection: "row",
         alignContent: 'center',
@@ -65,6 +72,25 @@ export const styles = StyleSheet.create({
         borderRadius: 50, 
         borderWidth: 2,       
         borderColor: 'white'
+<<<<<<< Updated upstream
+=======
+    },
+
+    xpBar:{
+        borderWidth: 1,
+        borderColor: 'white',
+        marginLeft: 10,
+        height: 25,
+        width: '100%',        // Full width of parent
+        maxWidth: 300,
+    },
+
+    input: {
+        height: 40,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+>>>>>>> Stashed changes
     },
 
     xpBar:{

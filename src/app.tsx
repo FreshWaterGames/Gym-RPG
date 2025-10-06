@@ -1,5 +1,6 @@
 import React, { useState } from "react"
-import { Text, TouchableOpacity, View } from "react-native"
+import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { SafeAreaProvider } from "react-native-safe-area-context"
 import { User } from './Classes/user.types'
 import { styles } from './styles'
 import { Stats } from './Views/StatsView'
@@ -28,8 +29,8 @@ const TEMP_USER: User ={
 }
 
 const App = () => {
-    const [curUser, setUser] = useState<User>(TEMP_USER)
-    const [curView, setView] = useState<number>(0)
+    const [curUser, setUser] = useState<User>(TEMP_USER) // user object
+    const [curView, setView] = useState<number>(0) // Which screen state is being shown
 
     const renderView = () => {
         switch(curView){
@@ -37,6 +38,10 @@ const App = () => {
                 return <Stats curUser={curUser} setCurView={setView}/>
             case 1: 
                 return <WorkoutView curUser={curUser} setCurUser={setUser}/>
+            case 2: 
+                return <IdleView curUser={curUser} setCurUser={setUser}/>
+            case 3: 
+                return <SettingView curUser={curUser} setCurUser={setUser}/>
         }
     }
 
@@ -53,8 +58,7 @@ export const TabBar = ({setCurView} : {setCurView: (curView: number) => void}) =
         <View style={styles.tabs}>
             <TouchableOpacity 
                     style={styles.tabsButton}
-                    onPress={() => setCurView(0)}
-                >
+                    onPress={() => setCurView(0)}>
                     <Text style={styles.tabsButtonTxt}>Stats</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
@@ -65,12 +69,43 @@ export const TabBar = ({setCurView} : {setCurView: (curView: number) => void}) =
                 <TouchableOpacity 
                     style={styles.tabsButton}
                     onPress = {() => setCurView(2)}>
+                    <Text style={styles.tabsButtonTxt} >Idle</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={styles.tabsButton}
+                    onPress = {() => setCurView(3)}>
                     <Text style={styles.tabsButtonTxt} >Settings</Text>
                 </TouchableOpacity>
         </View>
     )
 }
+
 export const WorkoutView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
+    return(
+        <View>
+            <Text
+            style={{
+                fontSize: 16
+            }}
+            >Check boxes arent built in ??</Text>
+
+            <SafeAreaProvider>
+                <SafeAreaView>
+                    <TextInput 
+                    style={styles.input}
+                    
+                    placeholder="Reps"
+                    keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
+                    >
+                    </TextInput>
+                </SafeAreaView>
+            </SafeAreaProvider>
+        </View>
+        
+    )
+}
+
+export const IdleView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
     return(
         <View>
             <Text
@@ -81,5 +116,18 @@ export const WorkoutView = ({curUser, setCurUser}: {curUser : User, setCurUser :
         </View>
     )
 }
+
+export const SettingView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
+    return(
+        <View>
+            <Text
+            style={{
+                fontSize: 16
+            }}
+            >Da Finky</Text>
+        </View>
+    )
+}
+
 
 export default App;

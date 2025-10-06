@@ -6,7 +6,7 @@ import { styles } from '../styles'
 
 export const Stats=({curUser, setCurView}: {curUser : User, setCurView: (curView: number) =>  void})=>{
     //Test Percentage 
-    const [viewPercent, setPercent] = useState(65)
+    const [viewPercent, setPercent] = useState(45)
     return(
         <View style={{
             flex: 1,

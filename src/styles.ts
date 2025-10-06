@@ -36,13 +36,10 @@ export const styles = StyleSheet.create({
     },
     
     tabs: {
-<<<<<<< Updated upstream
-=======
         position: 'absolute',
         bottom: 15,
         left: 0,
         right: 0,
->>>>>>> Stashed changes
         backgroundColor: '#0f172a',
         flexDirection: "row",
         alignContent: 'center',
@@ -53,8 +50,8 @@ export const styles = StyleSheet.create({
     
     tabsButton: {
         
-        margin: 20,
-        paddingHorizontal: 20,
+        margin: 10,
+        paddingHorizontal: 10,
         backgroundColor: '#007AFF',
         borderRadius: 5
         
@@ -72,8 +69,6 @@ export const styles = StyleSheet.create({
         borderRadius: 50, 
         borderWidth: 2,       
         borderColor: 'white'
-<<<<<<< Updated upstream
-=======
     },
 
     xpBar:{
@@ -90,15 +85,6 @@ export const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 1,
         padding: 10,
->>>>>>> Stashed changes
     },
 
-    xpBar:{
-        borderWidth: 1,
-        borderColor: 'white',
-        marginLeft: 10,
-        height: 25,
-        width: '100%',        // Full width of parent
-        maxWidth: 300,
-    }
 });

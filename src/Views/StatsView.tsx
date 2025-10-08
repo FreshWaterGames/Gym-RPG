@@ -1,10 +1,12 @@
 import { Image } from 'expo-image'
+import { SQLiteDatabase } from 'expo-sqlite'
 import React, { useState } from "react"
-import { ScrollView, Text, View } from "react-native"
-import { User } from '../Classes/user.types'
+import { ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { MuscleGroup, User } from '../classes/user.types'
+import { updateUserData } from '../database/userData'
 import { styles } from '../styles'
 
-export const Stats=({curUser, setCurView}: {curUser : User, setCurView: (curView: number) =>  void})=>{
+export const Stats=({curUser, setCurUser, db}: {curUser : User, setCurUser: (curUser: User) =>  void, db: SQLiteDatabase})=>{
     //Test Percentage 
     const [viewPercent, setPercent] = useState(45)
     return(
@@ -41,10 +43,31 @@ export const Stats=({curUser, setCurView}: {curUser : User, setCurView: (curView
             <ScrollView style={styles.statsInfo}>
                 {Object.entries(curUser.stats).map(([muscleName, lvl]) => {
                     return(
-                    <View key={muscleName}>
+                    <View key={muscleName} style={{flexDirection: 'row', padding: 3}}>
                         <Text style={
                             styles.statsTxt
                         }>{muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}: {lvl}</Text>
+
+                        <TouchableOpacity 
+                        
+                        onPress={() =>{
+                            setCurUser({
+                                //Button is temporary just to get SQL working
+                                ...curUser,
+                                stats: {
+                                    ...curUser.stats,
+                                    [muscleName]: curUser.stats[muscleName as keyof MuscleGroup] + 1
+                                }
+                            })
+                            updateUserData(db, muscleName, curUser.stats[muscleName as keyof MuscleGroup] + 1)
+                        }}><Text style={{
+                            padding: 5,
+                            borderColor: 'black',
+                            backgroundColor: '#0f172a',
+                            color: 'white',
+                            borderRadius: 5,
+                            fontSize: 24
+                        }}>+</Text></TouchableOpacity>
                     </View>
                     )
                 })}

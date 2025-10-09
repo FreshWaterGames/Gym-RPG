@@ -133,6 +133,7 @@ export const getUserData = async(db:  SQLiteDatabase): Promise<User | null> => {
 }
 
 
+//This doenst need to run more than once just to get the player in
 export const addUser = async (db:  SQLiteDatabase, user: User) =>{
   try{
     const result = await db.runAsync(

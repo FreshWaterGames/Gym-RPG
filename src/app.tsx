@@ -74,6 +74,8 @@ const App = () => {
         loadData()
     }, [loadData])
 
+
+    
     return(
         <View style={{flex: 1}}>
             {renderView()}

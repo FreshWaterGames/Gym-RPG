@@ -1,10 +1,11 @@
-import React, { useState } from "react"
+import { SQLiteDatabase } from "expo-sqlite"
+import React, { useCallback, useEffect, useState } from "react"
 import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
-import { User } from './Classes/user.types'
+import { User } from './classes/user.types'
+import { addUser, connectToDatabase, createTables, getUserData } from "./database/userData"
 import { styles } from './styles'
-import { Stats } from './Views/StatsView'
-
+import { Stats } from './views/StatsView'
 
 //Test User
 const TEMP_USER: User ={
@@ -25,17 +26,21 @@ const TEMP_USER: User ={
         hamstring: 1,
         abs: 1,
         obleques: 1
-    }
+    },
+    xpToLevel: 1
 }
 
 const App = () => {
     const [curUser, setUser] = useState<User>(TEMP_USER) // user object
     const [curView, setView] = useState<number>(0) // Which screen state is being shown
+    const [db, setDB] = useState<SQLiteDatabase | null>(null)
 
     const renderView = () => {
         switch(curView){
             case 0:
-                return <Stats curUser={curUser} setCurView={setView}/>
+                if (db){
+                return <Stats curUser={curUser} db={db} setCurUser={setUser}/>
+                }
             case 1: 
                 return <WorkoutView curUser={curUser} setCurUser={setUser}/>
             case 2: 
@@ -44,6 +49,30 @@ const App = () => {
                 return <SettingView curUser={curUser} setCurUser={setUser}/>
         }
     }
+
+    //For Database both functions are in userData file
+    //in database folder
+    const loadData = useCallback(async () => {
+        try{
+            const db = await connectToDatabase()
+            setDB(db)
+            await createTables(db)
+            await addUser(db, curUser)
+            //await getTable(db)
+           const tempUser = await getUserData(db)
+           if(tempUser != null){
+            //console.log(tempUser)
+            setUser(tempUser)
+           }
+        } catch(error) {
+            console.log(error)
+            throw Error("Somehting went wrong in loadData")
+        }
+    }, [])
+    
+    useEffect(() =>{
+        loadData()
+    }, [loadData])
 
     return(
         <View style={{flex: 1}}>

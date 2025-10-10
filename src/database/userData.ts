@@ -1,5 +1,5 @@
 import { openDatabaseAsync, SQLiteDatabase } from 'expo-sqlite';
-import { User } from "../classes/user.types";
+import { User } from "../Classes/user.types";
 
 
 export const connectToDatabase = async () => {

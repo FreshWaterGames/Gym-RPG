@@ -1,11 +1,10 @@
 import { SQLiteDatabase } from "expo-sqlite"
 import React, { useCallback, useEffect, useState } from "react"
 import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native"
-import { SafeAreaProvider } from "react-native-safe-area-context"
-import { User } from './classes/user.types'
+import { User } from './Classes/user.types'
 import { addUser, connectToDatabase, createTables, getUserData } from "./database/userData"
 import { styles } from './styles'
-import { Stats } from './views/StatsView'
+import { Stats } from './Views/StatsView'
 
 //Test User
 const TEMP_USER: User ={
@@ -112,26 +111,42 @@ export const TabBar = ({setCurView} : {setCurView: (curView: number) => void}) =
 }
 
 export const WorkoutView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
+    const [printer, setPrinter] = useState("testing stuff")
     return(
         <View>
-            <Text
-            style={{
-                fontSize: 16
-            }}
-            >Check boxes arent built in ??</Text>
+            <SafeAreaView style={{
+                flexDirection: "row",
+                }}>
 
-            <SafeAreaProvider>
-                <SafeAreaView>
-                    <TextInput 
-                    style={styles.input}
-                    
-                    placeholder="Reps"
-                    keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
-                    >
-                    </TextInput>
-                </SafeAreaView>
-            </SafeAreaProvider>
+                <TextInput style={styles.input}
+                placeholder="Sets"
+                placeholderTextColor={"grey"}
+                keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
+                value={printer}
+                onChangeText={(text)=>setPrinter(text)}
+                >
+                </TextInput>
+
+                <TextInput style={styles.input}
+                placeholder="Reps"
+                placeholderTextColor={"grey"}
+                keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
+                >
+                </TextInput>
+
+                <TextInput style={styles.input}
+                placeholder="Weight"
+                placeholderTextColor={"grey"}
+                keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
+                >
+                </TextInput>
+            </SafeAreaView>
+
+            <View>
+                <Text style={{fontSize: 30}}>{printer}</Text>
+            </View>
         </View>
+
         
     )
 }

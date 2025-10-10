@@ -97,7 +97,7 @@ export const getUserData = async(db:  SQLiteDatabase): Promise<User | null> => {
         }
 
         //Gets row data
-        const userFromDB = results[0]
+        const userFromDB: any = results[0]
         console.log("These them results you was askin fir")
         console.log(userFromDB)
         //IF THIS APPREARS RED ITS FINE Vscode just dont know how to read it
@@ -119,7 +119,7 @@ export const getUserData = async(db:  SQLiteDatabase): Promise<User | null> => {
             calfs: userFromDB.calfs,
             hamstring: userFromDB.hamstring,
             abs: userFromDB.abs,
-            obleques: userFromDB.obliques // Note: typo in interface "obleques"
+            obleques: userFromDB.obliques // typo in interface "obleques"
           }
         };
         if(curUser != null){

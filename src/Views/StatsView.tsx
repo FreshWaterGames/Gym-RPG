@@ -2,7 +2,7 @@ import { Image } from 'expo-image'
 import { SQLiteDatabase } from 'expo-sqlite'
 import React, { useState } from "react"
 import { ScrollView, Text, TouchableOpacity, View } from "react-native"
-import { MuscleGroup, User } from '../Classes/user.types'
+import { MuscleGroup, User } from '../classes/user.types'
 import { updateUserData } from '../database/userData'
 import { styles } from '../styles'
 

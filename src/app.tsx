@@ -1,10 +1,10 @@
 import { SQLiteDatabase } from "expo-sqlite"
 import React, { useCallback, useEffect, useState } from "react"
 import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native"
-import { User } from './classes/user.types'
+import { User } from './Classes/user.types'
 import { addUser, connectToDatabase, createTables, getUserData } from "./database/userData"
 import { styles } from './styles'
-import { Stats } from './views/StatsView'
+import { Stats } from './Views/StatsView'
 
 //Test User
 const TEMP_USER: User ={

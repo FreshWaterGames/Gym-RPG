@@ -1,5 +1,5 @@
 import { openDatabaseAsync, SQLiteDatabase } from 'expo-sqlite';
-import { User } from "../classes/user.types";
+import { User } from "../Classes/user.types";
 
 
 export const connectToDatabase = async () => {
@@ -98,8 +98,6 @@ export const getUserData = async(db:  SQLiteDatabase): Promise<User | null> => {
 
         //Gets row data
         const userFromDB: any = results[0]
-        console.log("These them results you was askin fir")
-        console.log(userFromDB)
         //IF THIS APPREARS RED ITS FINE Vscode just dont know how to read it
         const curUser: User = {
           id: userFromDB.id.toString(),

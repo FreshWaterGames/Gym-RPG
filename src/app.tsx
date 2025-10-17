@@ -1,11 +1,11 @@
-import CheckBox from 'expo-checkbox'
 import { SQLiteDatabase } from "expo-sqlite"
 import React, { useCallback, useEffect, useState } from "react"
-import { Text, TextInput, TouchableOpacity, View } from "react-native"
+import { Text, TouchableOpacity, View } from "react-native"
 import { User } from './Classes/user.types'
 import { addUser, connectToDatabase, createTables, getUserData } from "./database/userData"
 import { styles } from './styles'
 import { Stats } from './Views/StatsView'
+import { Workout } from './Views/WorkoutView'
 
 //Test User
 const TEMP_USER: User ={
@@ -42,7 +42,9 @@ const App = () => {
                 return <Stats curUser={curUser} db={db} setCurUser={setUser}/>
                 }
             case 1: 
-                return <WorkoutView curUser={curUser} setCurUser={setUser}/>
+                if (db){
+                return <Workout curUser={curUser} db={db} setCurUser={setUser}/>
+                }
             case 2: 
                 return <IdleView curUser={curUser} setCurUser={setUser}/>
             case 3: 
@@ -111,55 +113,7 @@ export const TabBar = ({setCurView} : {setCurView: (curView: number) => void}) =
     )
 }
 
-export const WorkoutView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
-    const [printer, setPrinter] = useState("testing stuff")
-    const [checkVal, setChecked] = useState(false)
-    
-    return(
-        <View>
-            <View style={{
-                flexDirection: "row",
-                }}>
 
-                <TextInput style={styles.input}
-                placeholder="Sets"
-                placeholderTextColor={"grey"}
-                keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
-                value={printer}
-                onChangeText={(text)=>setPrinter(text)}
-                >
-                </TextInput>
-
-                <TextInput style={styles.input}
-                placeholder="Reps"
-                placeholderTextColor={"grey"}
-                keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
-                >
-                </TextInput>
-
-                <TextInput style={styles.input}
-                placeholder="Weight"
-                placeholderTextColor={"grey"}
-                keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
-                >
-                </TextInput>
-            </View>
-
-            <View>
-                <Text style={{fontSize: 30}}>{printer}</Text>
-
-                <CheckBox
-                    value={checkVal}
-                    onValueChange={setChecked}
-                    //style={styles.checkbox}
-                    //color={isChecked ? '#4630EB' : undefined} // Optional: custom color when checked
-                />
-            </View>
-        </View>
-
-        
-    )
-}
 
 export const IdleView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
     return(

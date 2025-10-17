@@ -1,6 +1,7 @@
+import CheckBox from 'expo-checkbox'
 import { SQLiteDatabase } from "expo-sqlite"
 import React, { useCallback, useEffect, useState } from "react"
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { Text, TextInput, TouchableOpacity, View } from "react-native"
 import { User } from './Classes/user.types'
 import { addUser, connectToDatabase, createTables, getUserData } from "./database/userData"
 import { styles } from './styles'
@@ -112,9 +113,11 @@ export const TabBar = ({setCurView} : {setCurView: (curView: number) => void}) =
 
 export const WorkoutView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
     const [printer, setPrinter] = useState("testing stuff")
+    const [checkVal, setChecked] = useState(false)
+    
     return(
         <View>
-            <SafeAreaView style={{
+            <View style={{
                 flexDirection: "row",
                 }}>
 
@@ -140,10 +143,17 @@ export const WorkoutView = ({curUser, setCurUser}: {curUser : User, setCurUser :
                 keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
                 >
                 </TextInput>
-            </SafeAreaView>
+            </View>
 
             <View>
                 <Text style={{fontSize: 30}}>{printer}</Text>
+
+                <CheckBox
+                    value={checkVal}
+                    onValueChange={setChecked}
+                    //style={styles.checkbox}
+                    //color={isChecked ? '#4630EB' : undefined} // Optional: custom color when checked
+                />
             </View>
         </View>
 

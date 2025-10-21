@@ -1,14 +1,24 @@
-import { openDatabaseAsync, SQLiteDatabase } from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite';
 import { User } from "../Classes/user.types";
 
 
+
+//BRUHUHHH am i adding a new user everytime i thought i wasnt :/
+
+
+const db =  SQLite.openDatabaseSync('gymRPG.db')
+
 export const connectToDatabase = async () => {
-  return openDatabaseAsync('gymRPG.db')
+  return SQLite.openDatabaseAsync('gymRPG.db')
 }
 
+  
+export const removeTable = async () =>{ 
+  await db.getAllAsync("DROP TABLE IF EXISTS UserData")
+}
 //Table Name UserData
-export const createTables = async (db: SQLiteDatabase) => {
-  console.log("creating query")
+export const createTables = async () => {
+
   const userDataQuery = `
     CREATE TABLE IF NOT EXISTS UserData (
         id INTEGER DEFAULT 1,
@@ -16,6 +26,7 @@ export const createTables = async (db: SQLiteDatabase) => {
     level INTEGER,
     curXP INTEGER,
     xpToLevel INTEGER,
+    xpMax INTEGER,
     health INTEGER,
     chest INTEGER,
     bicep INTEGER,
@@ -42,7 +53,6 @@ export const createTables = async (db: SQLiteDatabase) => {
 }
 
 export const updateUserData = async (
-  db:  SQLiteDatabase,
   columnName: string,
   newValue: number
 ) => {
@@ -63,7 +73,7 @@ export const updateUserData = async (
 
 
 //Shows All Tables available
-export const getTable = async (db:  SQLiteDatabase) => {
+export const getTable = async () => {
   try {
     const tableNames: string[] = []
 
@@ -78,20 +88,33 @@ export const getTable = async (db:  SQLiteDatabase) => {
 }
 
 
-/*
-Function not needed right now since we only got one table
-export const removeTable = async (db: SQLiteDatabase, tableName: Table) => {
 
+
+export const removeALlUsers = async() =>{
+  const result = await db.getAllAsync("DELETE FROM UserData")
+  console.log("\n\n\n")
 }
-*/
+export const printAllUsers = async() =>{
+  const results = await db.getAllAsync("SELECT * FROM UserData")
+  console.log(results)
+}
+export const printUserData = async() => {
+  const results = await db.getAllAsync("SELECT * FROM UserData WHERE id = 1")
+  console.log(results)
+} 
+
+export const getSpecificVal = async(val: string) => {
+  const results: any = await db.getAllAsync('SELECT xpToLevel FROM UserData WHERE id = 1')
+  console.log(results[0].xpToLevel)
+  return results[0].xpToLevel
+}
 
 
-export const getUserData = async(db:  SQLiteDatabase): Promise<User | null> => {
+export const getUserData = async(): Promise<User | null> => {
     try{
-      console.log("inside getUserData")
         //Checking Database for user
-        const results = await db.getAllAsync("SELECT * FROM UserData")
-        if(results == null){
+        const results = await db.getAllAsync("SELECT * FROM UserData WHERE id = 1")
+        if(results == null || results.length === 0){
             console.log("No user found in UserData");
             return null;
         }
@@ -105,6 +128,8 @@ export const getUserData = async(db:  SQLiteDatabase): Promise<User | null> => {
           level: userFromDB.level,
           heatlh: userFromDB.health, 
           xpToLevel: userFromDB.xpToLevel,
+          xpMax: userFromDB.xpMax,
+
           stats: {
             chest: userFromDB.chest,
             bicep: userFromDB.bicep,
@@ -132,17 +157,23 @@ export const getUserData = async(db:  SQLiteDatabase): Promise<User | null> => {
 
 
 //This doenst need to run more than once just to get the player in
-export const addUser = async (db:  SQLiteDatabase, user: User) =>{
+export const addUser = async ( user: User) =>{
+  const constanttMult = 2.39
   try{
+    const userResults = await getUserData()
+    if (userResults == null){
+      //Freaking mathx
+      const xpMax = Math.pow(1/constanttMult, 2)
     const result = await db.runAsync(
       `INSERT OR IGNORE INTO UserData (
-        username, level, curXP, xpToLevel, health,
+        username, level, curXP, xpToLevel, xpMax, health,
         chest, bicep, tricep, delts, lats, traps,
         quads, glutes, calfs, hamstring, abs, obliques
-      ) VALUES (?, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)`,
-      [user.username]
+      ) VALUES (?, 1, 1, 1, 1000, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)`,
+      [user.username, xpMax]
     );
     return result.lastInsertRowId
+  }
   } catch(error){
     console.error(error)
     throw Error("Failed to add user")

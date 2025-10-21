@@ -1,10 +1,10 @@
-import { SQLiteDatabase } from "expo-sqlite"
 import React, { useCallback, useEffect, useState } from "react"
 import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { User } from './Classes/user.types'
-import { addUser, connectToDatabase, createTables, getUserData } from "./database/userData"
+import { addUser, createTables, getUserData } from "./database/userData"
 import { styles } from './styles'
+import { IdleView } from "./Views/IdleView"
 import { Stats } from './Views/StatsView'
 
 //Test User
@@ -27,42 +27,25 @@ const TEMP_USER: User ={
         abs: 1,
         obleques: 1
     },
-    xpToLevel: 1
+    xpToLevel: 1,
+    xpMax: 500
 }
 
 const App = () => {
     const [curUser, setUser] = useState<User>(TEMP_USER) // user object
     const [curView, setView] = useState<number>(0) // Which screen state is being shown
-    const [db, setDB] = useState<SQLiteDatabase | null>(null)
+    const [isLoading, setLoading] = useState<Boolean>(true)
+    //const [db, setDB] = useState<SQLiteDatabase | null>(null)
 
-    const renderView = () => {
-        switch(curView){
-            case 0:
-                if (db){
-                return <Stats curUser={curUser} db={db} setCurUser={setUser}/>
-                }
-            case 1: 
-                return <WorkoutView curUser={curUser} setCurUser={setUser}/>
-            case 2: 
-                return <IdleView curUser={curUser} setCurUser={setUser}/>
-            case 3: 
-                return <SettingView curUser={curUser} setCurUser={setUser}/>
-        }
-    }
-
-    //For Database both functions are in userData file
-    //in database folder
     const loadData = useCallback(async () => {
         try{
-            const db = await connectToDatabase()
-            setDB(db)
-            await createTables(db)
-            await addUser(db, curUser)
+            await createTables()
+            await addUser(curUser)
             //await getTable(db)
-           const tempUser = await getUserData(db)
+           const tempUser = await getUserData()
            if(tempUser != null){
-            //console.log(tempUser)
             setUser(tempUser)
+            setLoading(false)
            }
         } catch(error) {
             console.log(error)
@@ -74,6 +57,29 @@ const App = () => {
         loadData()
     }, [loadData])
 
+
+    const renderView = () => {
+        if(isLoading == false){
+        switch(curView){
+            case 0:
+                return <Stats curUser={curUser} setCurUser={setUser}/>
+            case 1: 
+                return <WorkoutView curUser={curUser} setCurUser={setUser}/>
+            case 2: 
+                return <IdleView curUser={curUser} setCurUser={setUser}/>
+            case 3: 
+                return <SettingView curUser={curUser} setCurUser={setUser}/>
+        }
+    }
+    }
+
+    //removeALlUsers()
+    //removeTable()
+
+    //For Database both functions are in userData file
+    //in database folder
+
+    //printAllUsers()
 
     
     return(
@@ -136,17 +142,6 @@ export const WorkoutView = ({curUser, setCurUser}: {curUser : User, setCurUser :
     )
 }
 
-export const IdleView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
-    return(
-        <View>
-            <Text
-            style={{
-                fontSize: 16
-            }}
-            >Yer nigga</Text>
-        </View>
-    )
-}
 
 export const SettingView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
     return(

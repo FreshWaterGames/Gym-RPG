@@ -20,5 +20,6 @@ export interface User {
     level: number,
     heatlh: number,
     xpToLevel: number,
+    xpMax: number
     
 }

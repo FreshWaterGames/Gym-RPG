@@ -77,14 +77,15 @@ const levelCheck = (xpToLevel: number, xpMax: number) => {
 const levelUp = (curUser: User, setCurUser: (curUser: User) => void) => {
     updateUserData('level', curUser.level + 1)
     updateUserData('xpToLevel', 0)
-
-    //updateUserData('xpMax', some formula calc for maxXP)
-
+    const nextXP = Math.pow(curUser.level, 3)
+    updateUserData('xpMax', nextXP)
+    
+    //Zack will set fr xp
 
     setCurUser({
         ...curUser,
         level: curUser.level + 1,
         xpToLevel: 0,
-        //xpMax: some formula to calc what the next xp should be
+        xpMax: nextXP
     })
 }

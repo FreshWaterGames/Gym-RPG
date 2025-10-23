@@ -31,7 +31,7 @@ export const Stats=({curUser, setCurUser}: {curUser : User, setCurUser: (curUser
                     }}>
                         <Text style={styles.nameTxt}>{curUser.username}</Text>
                         <Text style={styles.nameTxt}>HP: {curUser.heatlh}</Text>
-                        <Text style={styles.nameTxt}>XP: {curUser.xpToLevel}</Text>
+                        <Text style={styles.nameTxt}>Level: {curUser.level}</Text>
                     </View>
                     <View style={styles.xpBar} key={curUser.xpToLevel}>
                             <View style={{

@@ -6,7 +6,7 @@ import { User } from '../Classes/user.types'
 import { styles } from '../styles'
 
 export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : (user: User) => void, db: SQLiteDatabase}) => {
-    const [checkVal, setChecked] = useState(false)
+    const [checkedMuscles, setCheckedMuscles] = useState<{[key: string]: boolean}>({});
     
     return(
         <View>
@@ -17,52 +17,46 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
                 <TextInput style={styles.input}
                 placeholder="Sets"
                 placeholderTextColor={"grey"}
-                keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
-                //value={printer}
-                //onChangeText={(text)=>setPrinter(text)}
+                keyboardType="default"
                 >
                 </TextInput>
 
                 <TextInput style={styles.input}
                 placeholder="Reps"
                 placeholderTextColor={"grey"}
-                keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
+                keyboardType="default"
                 >
                 </TextInput>
 
                 <TextInput style={styles.input}
                 placeholder="Weight"
                 placeholderTextColor={"grey"}
-                keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
+                keyboardType="default"
                 >
                 </TextInput>
             </View>
 
-            <View>
-
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
                 {Object.entries(curUser.stats).map(([muscleName]) => { 
-                                    return(
-                                    <View key={muscleName} style={{flexDirection: 'row', padding: 3, }}>
-                                        <Text style={
-                                            styles.statsTxt
-                                        }>{muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}</Text>
-                                        
-                                        <CheckBox
-                                            value={checkVal}
-                                            onValueChange={setChecked}
-                                            //style={styles.checkbox}
-                                            //color={isChecked ? '#4630EB' : undefined} // Optional: custom color when checked
-                                        />
-
-                                        <Text></Text>
-
-
-                                    </View>
-                                    )
-                                })}
+                    return(
+                        <View 
+                            key={muscleName} 
+                            style={styles.checkBox}
+                        >
+                            <Text style={styles.statsTxt}>
+                                {muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}
+                            </Text>
+                            
+                            <CheckBox
+                                value={checkedMuscles[muscleName] || false}
+                                onValueChange={(newValue) => 
+                                    setCheckedMuscles(prev => ({...prev, [muscleName]: newValue}))
+                                }
+                            />
+                        </View>
+                    )
+                })}
             </View>
         </View>
-
-        
     )
 }

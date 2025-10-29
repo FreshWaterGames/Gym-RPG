@@ -58,7 +58,7 @@ export const Stats=({curUser, setCurUser, db}: {curUser : User, setCurUser: (cur
                                     ...curUser.stats,
                                     [muscleName]: curUser.stats[muscleName as keyof MuscleGroup] + 1
                                 }
-                            })
+                            }) 
                             updateUserData(db, muscleName, curUser.stats[muscleName as keyof MuscleGroup] + 1)
                         }}><Text style={{
                             padding: 5,

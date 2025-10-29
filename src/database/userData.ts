@@ -61,6 +61,23 @@ export const updateUserData = async (
 }
 
 
+export const incrementMuscleStat = async (
+  db: SQLiteDatabase,
+  muscleName: string
+) => {
+  const query = `
+    UPDATE UserData
+    SET ${muscleName} = ${muscleName} + 1
+    WHERE id = 1;
+  `
+  try {
+    return db.runAsync(query,muscleName)
+  } catch (error) {
+    console.log(error);
+    throw Error("Failed to increment muscle stat");
+  }
+}
+
 
 //Shows All Tables available
 export const getTable = async (db:  SQLiteDatabase) => {
@@ -150,3 +167,5 @@ export const addUser = async (db:  SQLiteDatabase, user: User) =>{
     throw Error("Failed to add user")
   }
 }
+
+

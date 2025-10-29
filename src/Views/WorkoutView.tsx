@@ -1,8 +1,10 @@
 import CheckBox from 'expo-checkbox'
 import { SQLiteDatabase } from 'expo-sqlite'
 import React, { useState } from "react"
-import { Text, TextInput, View } from "react-native"
+import { Text, TextInput, TouchableOpacity, View } from "react-native"
 import { User } from '../Classes/user.types'
+import { updateUserData } from '../database/userData'
+
 import { styles } from '../styles'
 
 export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : (user: User) => void, db: SQLiteDatabase}) => {
@@ -56,6 +58,21 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
                         </View>
                     )
                 })}
+            </View>
+
+            <View>
+                <TouchableOpacity 
+                        style={styles.tabsButton}
+                        onPress={() => {
+                            setCurUser({
+                                ...curUser,
+                                stats: {
+                                    ...curUser.stats, ["bicep"]: curUser.stats.bicep + 1
+                                }
+                            })
+                            updateUserData(db, "bicep", curUser.stats.bicep + 1)}}>
+                        <Text style={styles.tabsButtonTxt}>Stats</Text>
+                </TouchableOpacity>
             </View>
         </View>
     )

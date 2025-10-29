@@ -2,13 +2,16 @@ import CheckBox from 'expo-checkbox'
 import { SQLiteDatabase } from 'expo-sqlite'
 import React, { useState } from "react"
 import { Text, TextInput, TouchableOpacity, View } from "react-native"
-import { User } from '../Classes/user.types'
+import { MuscleGroup, User } from '../Classes/user.types'
 import { updateUserData } from '../database/userData'
 
 import { styles } from '../styles'
 
 export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : (user: User) => void, db: SQLiteDatabase}) => {
+    // manages the checked box value of muscle group values
     const [checkedMuscles, setCheckedMuscles] = useState<{[key: string]: boolean}>({});
+    // saves the string value of the checked box
+    const [muscleString, setMuscleString] = useState('');
     
     return(
         <View>
@@ -44,6 +47,7 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
                         <View 
                             key={muscleName} 
                             style={styles.checkBox}
+                            
                         >
                             <Text style={styles.statsTxt}>
                                 {muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}
@@ -51,27 +55,36 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
                             
                             <CheckBox
                                 value={checkedMuscles[muscleName] || false}
-                                onValueChange={(newValue) => 
+                                onValueChange={(newValue) => {
+                                    // maybe sets the checkbox to true or false??
                                     setCheckedMuscles(prev => ({...prev, [muscleName]: newValue}))
-                                }
+                                    // sets muscleString to be the current muscle name
+                                    if (newValue) {
+                                        setMuscleString(muscleName);
+                                    }
+                                }}
                             />
                         </View>
                     )
                 })}
             </View>
 
-            <View>
+
+            
+            <View> 
                 <TouchableOpacity 
                         style={styles.tabsButton}
                         onPress={() => {
+                            // sets the correct muscle group to update then updates it
                             setCurUser({
                                 ...curUser,
                                 stats: {
-                                    ...curUser.stats, ["bicep"]: curUser.stats.bicep + 1
+                                    ...curUser.stats, [muscleString]: curUser.stats[muscleString as keyof MuscleGroup] + 1
                                 }
-                            })
-                            updateUserData(db, "bicep", curUser.stats.bicep + 1)}}>
-                        <Text style={styles.tabsButtonTxt}>Stats</Text>
+                            });
+                            console.log(muscleString);
+                            updateUserData(db, muscleString, curUser.stats[muscleString as keyof MuscleGroup] + 1)}}>
+                        <Text style={styles.tabsButtonTxt}>Update</Text>
                 </TouchableOpacity>
             </View>
         </View>

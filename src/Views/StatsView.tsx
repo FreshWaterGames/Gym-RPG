@@ -53,6 +53,7 @@ export const Stats=({curUser, setCurUser, db}: {curUser : User, setCurUser: (cur
                         onPress={() =>{
                             setCurUser({
                                 //Button is temporary just to get SQL working
+                                //Example of use it
                                 ...curUser,
                                 stats: {
                                     ...curUser.stats,

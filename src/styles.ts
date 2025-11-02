@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
 
     nameTxt: {
         color: 'white',
-        fontSize: 24,
+        fontSize: 23,
         fontWeight: 'bold',
         padding: 10,
     },
@@ -64,8 +64,8 @@ export const styles = StyleSheet.create({
     },
 
     pfp: {
-        width: 100, 
-        height: 100 ,      
+        width: 75, 
+        height: 75 ,      
         borderRadius: 50, 
         borderWidth: 2,       
         borderColor: 'white'
@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
         borderColor: 'white',
         marginLeft: 10,
         height: 25,
-        width: '100%',        // Full width of parent
+        width: '90%',        // Full width of parent
         maxWidth: 300,
     },
 

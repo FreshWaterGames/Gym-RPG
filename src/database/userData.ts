@@ -1,11 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import { User } from "../Classes/user.types";
 
-
-
-//BRUHUHHH am i adding a new user everytime i thought i wasnt :/
-
-
 const db =  SQLite.openDatabaseSync('gymRPG.db')
 
 export const connectToDatabase = async () => {

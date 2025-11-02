@@ -9,9 +9,6 @@ export const Stats=({curUser, setCurUser}: {curUser : User, setCurUser: (curUser
     //Need to have percentage where itd be based on the level 
     //Test Percentage 
     const [viewPercent, setPercent] = useState((curUser.xpToLevel/curUser.xpMax) * 100)
-    console.log(viewPercent)
-    console.log(curUser.xpToLevel)
-    console.log(curUser.xpMax)
     return(
         <View style={{
             flex: 1,
@@ -32,6 +29,7 @@ export const Stats=({curUser, setCurUser}: {curUser : User, setCurUser: (curUser
                         <Text style={styles.nameTxt}>{curUser.username}</Text>
                         <Text style={styles.nameTxt}>HP: {curUser.heatlh}</Text>
                         <Text style={styles.nameTxt}>Level: {curUser.level}</Text>
+                        <Text style={styles.nameTxt}>XP: {curUser.xpToLevel}</Text>
                     </View>
                     <View style={styles.xpBar} key={curUser.xpToLevel}>
                             <View style={{

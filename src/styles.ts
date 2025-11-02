@@ -20,9 +20,9 @@ export const styles = StyleSheet.create({
 
     statsInfo: {
         flex: 1,
-        padding: 25,
-        borderRadius: 20,
-        borderWidth: 16,
+        padding: 30,
+        borderRadius: 30,
+        borderWidth: 20,
         borderColor: '#0f172a',
         borderBlockColor: '#0f172a',
         backgroundColor: 'white'
@@ -45,7 +45,8 @@ export const styles = StyleSheet.create({
         alignContent: 'center',
         justifyContent: 'center',
         paddingBottom: 5,
-        borderColor: 'white'
+        borderColor: 'white',
+        borderRadius: 30,
     },
     
     tabsButton: {

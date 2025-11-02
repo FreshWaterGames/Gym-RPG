@@ -66,13 +66,14 @@ export const IdleView = ({curUser, setCurUser}: {curUser : User, setCurUser: (cu
     )
 }
 
-
+//Move all functions to new file idk what to call it
 const levelCheck = (xpToLevel: number, xpMax: number) => {
     if(xpToLevel >= xpMax){
         return true
     }
     return false
 }
+
 
 const levelUp = (curUser: User, setCurUser: (curUser: User) => void) => {
     updateUserData('level', curUser.level + 1)

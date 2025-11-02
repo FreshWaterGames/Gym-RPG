@@ -66,7 +66,6 @@ export const updateUserData = async (
 }
 
 
-
 //Shows All Tables available
 export const getTable = async () => {
   try {
@@ -137,7 +136,7 @@ export const getUserData = async(): Promise<User | null> => {
             calfs: userFromDB.calfs,
             hamstring: userFromDB.hamstring,
             abs: userFromDB.abs,
-            obleques: userFromDB.obliques // typo in interface "obleques"
+            obliques: userFromDB.obliques // typo in interface "obleques"
           }
         };
         if(curUser != null){
@@ -174,3 +173,5 @@ export const addUser = async ( user: User) =>{
     throw Error("Failed to add user")
   }
 }
+
+

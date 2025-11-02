@@ -10,7 +10,7 @@ export interface MuscleGroup{
     calfs: number;
     hamstring: number;
     abs: number;
-    obleques: number;
+    obliques: number;
 }
 
 export interface User {

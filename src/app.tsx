@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from "react-native"
-import { SafeAreaProvider } from "react-native-safe-area-context"
+import { Text, TouchableOpacity, View } from "react-native"
 import { User } from './Classes/user.types'
 import { addUser, createTables, getUserData } from "./database/userData"
 import { styles } from './styles'
 import { IdleView } from "./Views/IdleView"
 import { Stats } from './Views/StatsView'
+import { Workout } from './Views/WorkoutView'
 
 //Test User
 const TEMP_USER: User ={
@@ -25,7 +25,7 @@ const TEMP_USER: User ={
         calfs: 6,
         hamstring: 1,
         abs: 1,
-        obleques: 1
+        obliques: 1
     },
     xpToLevel: 1,
     xpMax: 500
@@ -37,6 +37,25 @@ const App = () => {
     const [isLoading, setLoading] = useState<Boolean>(true)
     //const [db, setDB] = useState<SQLiteDatabase | null>(null)
 
+    const renderView = () => {
+        switch(curView){
+            case 0:
+                if (db){
+                return <Stats curUser={curUser} db={db} setCurUser={setUser}/>
+                }
+            case 1: 
+                if (db){
+                return <Workout curUser={curUser} db={db} setCurUser={setUser}/>
+                }
+            case 2: 
+                return <IdleView curUser={curUser} setCurUser={setUser}/>
+            case 3: 
+                return <SettingView curUser={curUser} setCurUser={setUser}/>
+        }
+    }
+
+    //For Database both functions are in userData file
+    //in database folder
     const loadData = useCallback(async () => {
         try{
             await createTables()
@@ -117,30 +136,7 @@ export const TabBar = ({setCurView} : {setCurView: (curView: number) => void}) =
     )
 }
 
-export const WorkoutView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {
-    return(
-        <View>
-            <Text
-            style={{
-                fontSize: 16
-            }}
-            >Check boxes arent built in ??</Text>
 
-            <SafeAreaProvider>
-                <SafeAreaView>
-                    <TextInput 
-                    style={styles.input}
-                    
-                    placeholder="Reps"
-                    keyboardType="default" // prefer to be numeric but need to code in a way to lower keybaord after it appears :I
-                    >
-                    </TextInput>
-                </SafeAreaView>
-            </SafeAreaProvider>
-        </View>
-        
-    )
-}
 
 
 export const SettingView = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void }) => {

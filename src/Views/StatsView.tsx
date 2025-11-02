@@ -62,7 +62,7 @@ export const Stats=({curUser, setCurUser}: {curUser : User, setCurUser: (curUser
                                     [muscleName]: curUser.stats[muscleName as keyof MuscleGroup] + 1
                                 }
                             }) 
-                            updateUserData(db, muscleName, curUser.stats[muscleName as keyof MuscleGroup] + 1)
+                            updateUserData(muscleName, curUser.stats[muscleName as keyof MuscleGroup] + 1)
                         }}><Text style={{
                             padding: 5,
                             borderColor: 'black',

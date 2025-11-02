@@ -1,5 +1,4 @@
 import CheckBox from 'expo-checkbox'
-import { SQLiteDatabase } from 'expo-sqlite'
 import React, { useState } from "react"
 import { Text, TextInput, TouchableOpacity, View } from "react-native"
 import { MuscleGroup, User } from '../Classes/user.types'
@@ -7,7 +6,7 @@ import { updateUserData } from '../database/userData'
 
 import { styles } from '../styles'
 
-export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : (user: User) => void, db: SQLiteDatabase}) => {
+export const Workout= ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void}) => {
     // manages the checked box value of muscle group values
     const [checkedMuscles, setCheckedMuscles] = useState<{[key: string]: boolean}>({});
     // saves the string value of the checked box
@@ -98,7 +97,7 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
                             console.log(muscleString);
 
                             // data update
-                            updateUserData(db, muscleString, newMuscleValue)}}>
+                            updateUserData(muscleString, newMuscleValue)}}>
 
                         <Text style={styles.tabsButtonTxt}>Update</Text>
                 </TouchableOpacity>

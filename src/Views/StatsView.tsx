@@ -1,14 +1,14 @@
 import { Image } from 'expo-image'
-import { SQLiteDatabase } from 'expo-sqlite'
 import React, { useState } from "react"
 import { ScrollView, Text, TouchableOpacity, View } from "react-native"
 import { MuscleGroup, User } from '../Classes/user.types'
 import { updateUserData } from '../database/userData'
 import { styles } from '../styles'
 
-export const Stats=({curUser, setCurUser, db}: {curUser : User, setCurUser: (curUser: User) =>  void, db: SQLiteDatabase})=>{
+export const Stats=({curUser, setCurUser}: {curUser : User, setCurUser: (curUser: User) =>  void})=>{
+    //Need to have percentage where itd be based on the level 
     //Test Percentage 
-    const [viewPercent, setPercent] = useState(45)
+    const [viewPercent, setPercent] = useState((curUser.xpToLevel/curUser.xpMax) * 100)
     return(
         <View style={{
             flex: 1,
@@ -28,8 +28,10 @@ export const Stats=({curUser, setCurUser, db}: {curUser : User, setCurUser: (cur
                     }}>
                         <Text style={styles.nameTxt}>{curUser.username}</Text>
                         <Text style={styles.nameTxt}>HP: {curUser.heatlh}</Text>
+                        <Text style={styles.nameTxt}>Level: {curUser.level}</Text>
+                        <Text style={styles.nameTxt}>XP: {curUser.xpToLevel}</Text>
                     </View>
-                    <View style={styles.xpBar}>
+                    <View style={styles.xpBar} key={curUser.xpToLevel}>
                             <View style={{
                                 backgroundColor: 'orange',
                                 width: `${viewPercent}%`,

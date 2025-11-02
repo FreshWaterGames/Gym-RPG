@@ -7,7 +7,7 @@ export default function Index() {
   return (
 <>
       <Stack.Screen options={{ headerShown: false }} />
-      <View style={{flex: 1, paddingTop: 55, backgroundColor: "#0f172a"}}>
+      <View style={{flex: 1, paddingTop: 55, backgroundColor: "FFFFFF"}}>
         <App/>
       </View>
     </>

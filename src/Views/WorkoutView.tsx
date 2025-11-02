@@ -12,6 +12,10 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
     const [checkedMuscles, setCheckedMuscles] = useState<{[key: string]: boolean}>({});
     // saves the string value of the checked box
     const [muscleString, setMuscleString] = useState('');
+
+    const [setsVal, setSetsVal] = useState('');
+    const [repsVal, setRepVal] = useState('');
+    const [weightVal, setWeightVal] = useState('');
     
     return(
         <View>
@@ -23,6 +27,8 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
                 placeholder="Sets"
                 placeholderTextColor={"grey"}
                 keyboardType="default"
+                value={setsVal}
+                onChangeText={setSetsVal}
                 >
                 </TextInput>
 
@@ -30,6 +36,8 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
                 placeholder="Reps"
                 placeholderTextColor={"grey"}
                 keyboardType="default"
+                value={repsVal}
+                onChangeText={setRepVal}
                 >
                 </TextInput>
 
@@ -37,6 +45,8 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
                 placeholder="Weight"
                 placeholderTextColor={"grey"}
                 keyboardType="default"
+                value={weightVal}
+                onChangeText={setWeightVal}
                 >
                 </TextInput>
             </View>
@@ -47,7 +57,6 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
                         <View 
                             key={muscleName} 
                             style={styles.checkBox}
-                            
                         >
                             <Text style={styles.statsTxt}>
                                 {muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}
@@ -70,23 +79,41 @@ export const Workout= ({curUser, setCurUser, db}: {curUser : User, setCurUser : 
             </View>
 
 
-            
+            {/* Update button */}
             <View> 
                 <TouchableOpacity 
                         style={styles.tabsButton}
                         onPress={() => {
-                            // sets the correct muscle group to update then updates it
+                            
+                            const finalVal = finalCalc(setsVal, repsVal, weightVal) 
+
+                            const newMuscleValue = Number(curUser.stats[muscleString as keyof MuscleGroup] + finalVal)
+
                             setCurUser({
-                                ...curUser,
-                                stats: {
-                                    ...curUser.stats, [muscleString]: curUser.stats[muscleString as keyof MuscleGroup] + 1
+                                ...curUser, stats: {
+                                    ...curUser.stats, [muscleString]: newMuscleValue
                                 }
                             });
+
                             console.log(muscleString);
-                            updateUserData(db, muscleString, curUser.stats[muscleString as keyof MuscleGroup] + 1)}}>
+
+                            // data update
+                            updateUserData(db, muscleString, newMuscleValue)}}>
+
                         <Text style={styles.tabsButtonTxt}>Update</Text>
                 </TouchableOpacity>
             </View>
         </View>
     )
+}
+
+const finalCalc = (sets: string, reps: string, weight:string) => {
+    
+    const setsValue = Number(sets);
+    const repsValue = Number(reps);
+    const weightValue = Number(weight);
+
+    return (setsValue + repsValue) + weightValue
+
+    // need xp max for muscles
 }

@@ -25,7 +25,7 @@ const TEMP_USER: User ={
         calfs: 6,
         hamstring: 1,
         abs: 1,
-        obleques: 1
+        obliques: 1
     },
     xpToLevel: 1
 }

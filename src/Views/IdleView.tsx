@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Text, TouchableOpacity, View } from "react-native"
+import React, { useEffect, useRef, useState } from 'react'
+import { Animated, Text, TouchableOpacity, View } from "react-native"
 import { Monster } from '../Classes/monster.types'
 import { User } from '../Classes/user.types'
 import { getSpecificVal, updateUserData } from '../database/userData'
@@ -12,7 +12,9 @@ const temp_Monster: Monster = {
 export const IdleView = ({curUser, setCurUser}: {curUser : User, setCurUser: (curUser: User) => void}) => {
     const [curMontser, setMonster] = useState<Monster>(temp_Monster)
     return(
-        <View>
+        <View style={{
+            backgroundColor: '#0f172a'
+        }}>
             <Text style={{
                 color: 'white',
                 fontSize: 16,
@@ -21,11 +23,12 @@ export const IdleView = ({curUser, setCurUser}: {curUser : User, setCurUser: (cu
             }}>Health: {curMontser.health}</Text>
             <TouchableOpacity
             onPress={async() => {
+                //Needs to be monster reset function
+                //Like resetMonster() or something
                 const newHealth = curMontser.health - 1
                     setMonster({
                         ...curMontser,
                         health: newHealth
-    
                     })
                 
                 {if (newHealth == 0){
@@ -64,6 +67,27 @@ export const IdleView = ({curUser, setCurUser}: {curUser : User, setCurUser: (cu
             </TouchableOpacity>
         </View>
     )
+}
+
+const FadeInView = (props: any) => {
+    //Initial value for opacity is 0 so it can come into view
+    const fadeAnim = useRef(new Animated.Value(0)).current
+
+    useEffect(() =>{
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 3000,
+            useNativeDriver: true,
+        }).start();
+    }, [fadeAnim]);
+
+    return(<Animated.View
+        style={{
+            ...props.style,
+            opacity: fadeAnim //Binding
+        }}>{props.children}</Animated.View>
+    )
+
 }
 
 //Move all functions to new file idk what to call it

@@ -96,6 +96,18 @@ export const styles = StyleSheet.create({
         padding: 3, 
         width: '33.33%',
         alignItems: 'center'
+    },
+
+    fadeView: {
+        alignSelf: 'center',
+        borderRadius: 20,
+        color: 'white',
+        backgroundColor: 'white'
+    },
+
+    fadeText: {
+        fontSize: 15,
+        padding: 10
     }
 
 });

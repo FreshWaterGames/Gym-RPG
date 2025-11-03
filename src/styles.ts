@@ -13,19 +13,20 @@ export const styles = StyleSheet.create({
 
     nameTxt: {
         color: 'white',
-        fontSize: 23,
+        fontSize: 20,
         fontWeight: 'bold',
-        padding: 10,
+        padding: 8,
     },
 
     statsInfo: {
         flex: 1,
         padding: 30,
-        borderRadius: 30,
+        borderRadius: 40,
         borderWidth: 20,
         borderColor: '#0f172a',
         borderBlockColor: '#0f172a',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        height: '60%'
     },
 
     statsTxt: {
@@ -37,31 +38,30 @@ export const styles = StyleSheet.create({
     
     tabs: {
         position: 'absolute',
-        bottom: 15,
-        left: 0,
-        right: 0,
+        bottom: '5%',
         backgroundColor: '#0f172a',
         flexDirection: "row",
-        alignContent: 'center',
-        justifyContent: 'center',
-        paddingBottom: 5,
+        padding: 13,
         borderColor: 'white',
-        borderRadius: 30,
+        borderRadius: 50,
+        width: '85%',
+        alignSelf: 'center',
+        justifyContent: 'space-around'
     },
     
     tabsButton: {
-        
-        margin: 10,
-        paddingHorizontal: 10,
+        margin: 5,
+        padding: 5,
         backgroundColor: '#007AFF',
-        borderRadius: 5
+        borderRadius: 12
         
     },
    
     
     tabsButtonTxt: {
         color: 'white',
-        fontSize: 18
+        fontSize: 18,
+        padding: 1
     },
 
     pfp: {
@@ -79,6 +79,8 @@ export const styles = StyleSheet.create({
         height: 25,
         width: '90%',        // Full width of parent
         maxWidth: 300,
+        zIndex: 0,
+        position: 'relative'
     },
 
     input: {

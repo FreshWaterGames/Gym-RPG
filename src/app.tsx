@@ -34,12 +34,15 @@ const TEMP_USER: User ={
 const App = () => {
     const [curUser, setUser] = useState<User>(TEMP_USER) // user object
     const [curView, setView] = useState<number>(0) // Which screen state is being shown
+    const [isLoading, setLoading] = useState<Boolean>(true)
     //const [db, setDB] = useState<SQLiteDatabase | null>(null)
 
     const renderView = () => {
         switch(curView){
             case 0:
-                return <Stats curUser={curUser} setCurUser={setUser}/>
+                if (isLoading == false){
+                    return <Stats curUser={curUser} setCurUser={setUser}/>
+                }
             case 1: 
                 return <Workout curUser={curUser} setCurUser={setUser}/>
             case 2: 
@@ -60,6 +63,7 @@ const App = () => {
            const tempUser = await getUserData()
            if(tempUser != null){
             //console.log(tempUser)
+            setLoading(false)
             setUser(tempUser)
            }
         } catch(error) {

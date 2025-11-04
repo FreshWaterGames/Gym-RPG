@@ -3,6 +3,7 @@ import { Animated, Text, TouchableOpacity, View } from "react-native";
 import { Monster } from "../Classes/monster.types";
 import { User } from "../Classes/user.types";
 import { getSpecificVal, updateUserData } from "../database/userData";
+import { levelCheck, levelUp } from "../Helper/userHelper";
 import { styles } from "../styles";
 
 const temp_Monster: Monster = {
@@ -16,7 +17,7 @@ export const IdleView = ({
   curUser: User;
   setCurUser: (curUser: User) => void;
 }) => {
-  const [curMontser, setMonster] = useState<Monster>(temp_Monster);
+  const [curMonster, setMonster] = useState<Monster>(temp_Monster);
   return (
     <View
       style={{
@@ -32,46 +33,25 @@ export const IdleView = ({
           paddingTop: 20,
         }}
       >
-        Health: {curMontser.health}
+        Health: {curMonster.health}
       </Text>
       <TouchableOpacity
         onPress={async () => {
           //Needs to be monster reset function
           //Like resetMonster() or something
-          const newHealth = curMontser.health - 1;
+          const newHealth = curMonster.health - 1;
           setMonster({
-            ...curMontser,
+            ...curMonster,
             health: newHealth,
           });
 
           {
             if (newHealth == 0) {
               try {
-                const lastXP = await getSpecificVal("xpToLevel");
-
-                //Const for xp calc
-                const xpWeight = 15 * 2.39;
-                const xpCalc = Number(
-                  Math.round(xpWeight * curMontser.level + lastXP)
-                );
-
-                //need to check if can level up
-                if (levelCheck(xpCalc, curUser.xpMax) == false) {
-                  updateUserData("xpToLevel", xpCalc);
-                  setCurUser({
-                    ...curUser,
-                    xpToLevel: xpCalc,
-                  });
-                } else {
-                  levelUp(curUser, setCurUser);
-                }
-
-                setMonster({
-                  ...curMontser,
-                  health: 30,
-                });
-              } catch (error) {
-                console.log(error);
+                checkXP({curUser, setCurUser, curMonster, setMonster})
+              }
+              catch(error){
+                console.log(error)
               }
             }
           }
@@ -86,14 +66,20 @@ export const IdleView = ({
           🧌
         </Text>
       </TouchableOpacity>
-      <FadeInView health={curMontser.health} style={styles.fadeView}>
+      <FadeInView health={curMonster.health} style={styles.fadeView}>
         <Text style={styles.fadeText}>
-          + {15 * 2.39 * curMontser.level} XP!
+          + {15 * 2.39 * curMonster.level} XP!
         </Text>
       </FadeInView>
+      {levelCheck(curUser.xpToLevel, curUser.xpMax) 
+      ? <FadeInView health={0}>
+          <Text>Leveled Up to level {curUser.level}!</Text>
+      </FadeInView>
+      : <View></View>}
     </View>
   );
 };
+
 
 interface FadeInProps {
   children: React.ReactNode;
@@ -136,26 +122,31 @@ const FadeInView = (props: FadeInProps) => {
   );
 };
 
-//Move all functions to new file idk what to call it
-const levelCheck = (xpToLevel: number, xpMax: number) => {
-  if (xpToLevel >= xpMax) {
-    return true;
+const checkXP = async({curUser, setCurUser, curMonster, setMonster} : {curUser: User, setCurUser: (curUser: User) => void, curMonster: Monster, setMonster: (curMonster: Monster) => void}) => {
+  try {
+    const lastXP = await getSpecificVal("xpToLevel");
+    //Const for xp calc
+    const xpWeight = 15 * 2.39;
+    const xpCalc = Number(
+      Math.round(xpWeight * curMonster.level + lastXP)
+    );
+
+    //need to check if can level up
+    if (levelCheck(xpCalc, curUser.xpMax) == false) {
+      await updateUserData("xpToLevel", xpCalc);
+      setCurUser({
+        ...curUser,
+        xpToLevel: xpCalc,
+      });
+    } else {
+      levelUp(curUser, setCurUser);
+    }
+
+    setMonster({
+      ...curMonster,
+      health: 30,
+    });
+  } catch (error) {
+    console.log(error);
   }
-  return false;
-};
-
-const levelUp = (curUser: User, setCurUser: (curUser: User) => void) => {
-  updateUserData("level", curUser.level + 1);
-  updateUserData("xpToLevel", 0);
-  const nextXP = Math.pow(curUser.level, 3);
-  updateUserData("xpMax", nextXP);
-
-  //Zack will set fr xp
-
-  setCurUser({
-    ...curUser,
-    level: curUser.level + 1,
-    xpToLevel: 0,
-    xpMax: nextXP,
-  });
-};
+}

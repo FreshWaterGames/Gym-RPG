@@ -63,6 +63,9 @@ export const IdleView = ({
             textAlign: "center",
           }}
         >
+          {
+            //Da monster
+          }
           🧌
         </Text>
       </TouchableOpacity>

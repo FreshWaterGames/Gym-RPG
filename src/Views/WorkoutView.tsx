@@ -1,6 +1,6 @@
 import CheckBox from 'expo-checkbox'
 import React, { useState } from "react"
-import { Text, TextInput, TouchableOpacity, View } from "react-native"
+import { Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
 import { MuscleGroup, User } from '../Classes/user.types'
 import { updateUserData } from '../database/userData'
 
@@ -17,92 +17,111 @@ export const Workout= ({curUser, setCurUser}: {curUser : User, setCurUser : (use
     const [weightVal, setWeightVal] = useState('');
     
     return(
-        <View>
-            <View style={{
-                flexDirection: "row",
-                }}>
+        <TouchableWithoutFeedback onPress={() => {
+            Keyboard.dismiss()
+        }}>
+            <View>
+                <View style={{flexDirection: "row", marginBottom: 10}}>
 
-                <TextInput style={styles.input}
-                placeholder="Sets"
-                placeholderTextColor={"grey"}
-                keyboardType="default"
-                value={setsVal}
-                onChangeText={setSetsVal}
-                >
-                </TextInput>
+                    <TextInput style={styles.input}
+                    placeholder="Sets"
+                    placeholderTextColor={"grey"}
+                    keyboardType="numeric"
+                    value={setsVal}
+                    onChangeText={setSetsVal}
+                    >
+                    </TextInput>
 
-                <TextInput style={styles.input}
-                placeholder="Reps"
-                placeholderTextColor={"grey"}
-                keyboardType="default"
-                value={repsVal}
-                onChangeText={setRepVal}
-                >
-                </TextInput>
+                    <TextInput style={styles.input}
+                    placeholder="Reps"
+                    placeholderTextColor={"grey"}
+                    keyboardType="numeric"
+                    value={repsVal}
+                    onChangeText={setRepVal}
+                    >
+                    </TextInput>
 
-                <TextInput style={styles.input}
-                placeholder="Weight"
-                placeholderTextColor={"grey"}
-                keyboardType="default"
-                value={weightVal}
-                onChangeText={setWeightVal}
-                >
-                </TextInput>
-            </View>
+                    <TextInput style={styles.input}
+                    placeholder="Weight"
+                    placeholderTextColor={"grey"}
+                    keyboardType="numeric"
+                    value={weightVal}
+                    onChangeText={setWeightVal}
+                    >
+                    </TextInput>
+                </View>
 
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap'}}>
-                {Object.entries(curUser.stats).map(([muscleName]) => { 
-                    return(
-                        <View 
-                            key={muscleName} 
-                            style={styles.checkBox}
-                        >
-                            <Text style={styles.statsTxt}>
-                                {muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}
-                            </Text>
-                            
-                            <CheckBox
-                                value={checkedMuscles[muscleName] || false}
-                                onValueChange={(newValue) => {
-                                    // maybe sets the checkbox to true or false??
-                                    setCheckedMuscles(prev => ({...prev, [muscleName]: newValue}))
-                                    // sets muscleString to be the current muscle name
-                                    if (newValue) {
-                                        setMuscleString(muscleName);
+
+                {/* Muslce Buttons */}
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: 100}}>
+                    {Object.entries(curUser.stats).map(([muscleName]) => { 
+                        return(
+                            <View 
+                                key={muscleName} 
+                                style={styles.checkBox}
+                            >
+                                <Text style={styles.checkboxTxt}>
+                                    {muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}
+                                </Text>
+                                
+                                <CheckBox
+                                    value={checkedMuscles[muscleName] || false}
+                                    onValueChange={(newValue) => {
+                                        // maybe sets the checkbox to true or false??
+                                        //setCheckedMuscles(prev => ({...prev, [muscleName]: newValue}))
+
+                                        // checked muscle gives out muscle xp
+                                        if (newValue) {
+                                            setCheckedMuscles({ [muscleName]: true});
+                                            setMuscleString(muscleName);
+                                        } else {
+                                            setCheckedMuscles({});
+                                            setMuscleString('')
+                                        }
+                                    }}
+                                />
+                            </View>
+                        )
+                    })}
+                </View>
+
+
+
+                {/* Update button */}
+                <View> 
+                    <TouchableOpacity 
+                            style={styles.updateButton}
+                            onPress={() => {
+                                
+                                const finalVal = finalCalc(setsVal, repsVal, weightVal) 
+
+                                const newMuscleValue = Number(curUser.stats[muscleString as keyof MuscleGroup] + finalVal)
+
+                                setCurUser({
+                                    ...curUser, stats: {
+                                        ...curUser.stats, [muscleString]: newMuscleValue
                                     }
-                                }}
-                            />
-                        </View>
-                    )
-                })}
+                                });
+
+                                console.log(muscleString);
+
+                                // data update
+                                updateUserData(muscleString, newMuscleValue)
+
+                                // Clear all inputs
+                                setSetsVal('');
+                                setRepVal('');
+                                setWeightVal('');
+                                setCheckedMuscles({});
+                                setMuscleString('');
+                                
+                                }}>
+
+                            <Text style={styles.updateButtonTxt}>Update</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-
-
-            {/* Update button */}
-            <View> 
-                <TouchableOpacity 
-                        style={styles.tabsButton}
-                        onPress={() => {
-                            
-                            const finalVal = finalCalc(setsVal, repsVal, weightVal) 
-
-                            const newMuscleValue = Number(curUser.stats[muscleString as keyof MuscleGroup] + finalVal)
-
-                            setCurUser({
-                                ...curUser, stats: {
-                                    ...curUser.stats, [muscleString]: newMuscleValue
-                                }
-                            });
-
-                            console.log(muscleString);
-
-                            // data update
-                            updateUserData(muscleString, newMuscleValue)}}>
-
-                        <Text style={styles.tabsButtonTxt}>Update</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+        </TouchableWithoutFeedback>
     )
 }
 

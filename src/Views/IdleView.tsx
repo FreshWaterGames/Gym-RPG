@@ -39,7 +39,7 @@ export const IdleView = ({
         onPress={async () => {
           //Needs to be monster reset function
           //Like resetMonster() or something
-          const newHealth = curMonster.health - 1;
+          const newHealth = curMonster.health - curUser.attackStat;
           setMonster({
             ...curMonster,
             health: newHealth,

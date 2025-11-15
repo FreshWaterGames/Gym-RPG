@@ -13,13 +13,31 @@ export interface MuscleGroup{
     obliques: number;
 }
 
+export interface MuscleGroupXP {
+    chestXP: number;
+    bicepXP: number;
+    tricepXP: number;
+    deltsXP: number;
+    latsXP: number;
+    trapsXP: number;
+    quadsXP: number;
+    glutesXP: number;
+    calfsXP: number;
+    hamstringXP: number;
+    absXP: number;
+    obliquesXP: number;
+}
+
 export interface User {
     id: string;
     username: string;
     stats: MuscleGroup;
+    statsXP: MuscleGroupXP;
     level: number,
     heatlh: number,
     xpToLevel: number,
-    xpMax: number
+    xpMax: number,
+    attackStat: number,
+    curMuscleXP: number,
     
 }

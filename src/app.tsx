@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { User } from "./Classes/user.types";
 import {
-    addUser,
-    connectToDatabase,
-    createTables,
-    getUserData,
-    printUserData,
+  addUser,
+  connectToDatabase,
+  createTables,
+  getUserData,
+  printUserData
 } from "./database/userData";
 import { styles } from "./styles";
 import { IdleView } from "./Views/IdleView";
@@ -115,6 +115,7 @@ export const initDatabase = async ({
   curUser: User
 }) => {
   const db = await connectToDatabase();
+  //await removeTable();
   await createTables();
   //await addUser(curUser)
   //await getTable(db)

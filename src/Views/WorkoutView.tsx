@@ -1,10 +1,10 @@
-import CheckBox from 'expo-checkbox'
-import React, { useState } from "react"
-import { Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
-import { MuscleGroup, User } from '../Classes/user.types'
-import { updateUserData } from '../database/userData'
+import CheckBox from 'expo-checkbox';
+import React, { useState } from "react";
+import { Keyboard, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { MuscleGroup, User } from '../Classes/user.types';
+import { updateUserData } from '../database/userData';
 
-import { styles } from '../styles'
+import { styles } from '../styles';
 
 export const Workout= ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void}) => {
     // manages the checked box value of muscle group values
@@ -12,9 +12,12 @@ export const Workout= ({curUser, setCurUser}: {curUser : User, setCurUser : (use
     // saves the string value of the checked box
     const [muscleString, setMuscleString] = useState('');
 
+    const []
+
     const [setsVal, setSetsVal] = useState('');
     const [repsVal, setRepVal] = useState('');
     const [weightVal, setWeightVal] = useState('');
+    
     
     return(
         <TouchableWithoutFeedback onPress={() => {
@@ -120,7 +123,10 @@ export const Workout= ({curUser, setCurUser}: {curUser : User, setCurUser : (use
                             <Text style={styles.updateButtonTxt}>Update</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+                    <TouchableOpacity style={styles.tabsButton} onPress={() => setCurView(3)}>
+                    <Text style={styles.tabsButtonTxt}>Settings</Text>
+                    </TouchableOpacity>
+                </View>
         </TouchableWithoutFeedback>
     )
 }

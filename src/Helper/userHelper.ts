@@ -9,14 +9,16 @@ export const levelUp = async (
 ) => {
   await updateUserData("level", curUser.level + 1);
   await updateUserData("xpToLevel", 0);
-  const nextXP = Math.pow(curUser.level, 3) + curUser.xpMax;
+  const nextXP = Math.pow(curUser.level, 3) * curUser.xpMax;
   await updateUserData("xpMax", nextXP);
+  const attackSt = await getAttackStat(curUser)
 
   setCurUser({
     ...curUser,
     level: curUser.level + 1,
     xpToLevel: 0,
     xpMax: nextXP,
+    attackStat: attackSt,
   });
 };
 
@@ -41,6 +43,8 @@ export const getAttackStat = (curUser: User) => {
   } else {
     return attackFinal;
   }
+  console.log("getting attack final")
+  console.log(attackFinal)
 };
 
 export const setAllStats = ({

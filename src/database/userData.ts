@@ -15,25 +15,43 @@ export const createTables = async () => {
   const userDataQuery = `
     CREATE TABLE IF NOT EXISTS UserData (
         id INTEGER DEFAULT 1,
-    username TEXT,
-    level INTEGER,
-    curXP INTEGER,
-    xpToLevel INTEGER,
-    xpMax INTEGER,
-    health INTEGER,
-    chest INTEGER,
-    bicep INTEGER,
-    tricep INTEGER,
-    delts INTEGER,
-    lats INTEGER,
-    traps INTEGER,
-    quads INTEGER,
-    glutes INTEGER,
-    calfs INTEGER,
-    hamstring INTEGER,
-    abs INTEGER,
-    obliques INTEGER,
-    PRIMARY KEY(id)
+        username TEXT,
+        level INTEGER,
+        curMuscleXP INTEGER,
+        xpToLevel INTEGER,
+        xpMax INTEGER,
+        attackStat INTEGER,
+        health INTEGER,
+        
+        -- Muscle Base Stats
+        chest INTEGER,
+        bicep INTEGER,
+        tricep INTEGER,
+        delts INTEGER,
+        lats INTEGER,
+        traps INTEGER,
+        quads INTEGER,
+        glutes INTEGER,
+        calfs INTEGER,
+        hamstring INTEGER,
+        abs INTEGER,
+        obliques INTEGER,
+
+        -- Muscle XP Stats (New Columns)
+        chestXP INTEGER,
+        bicepXP INTEGER,
+        tricepXP INTEGER,
+        deltsXP INTEGER,
+        latsXP INTEGER,
+        trapsXP INTEGER,
+        quadsXP INTEGER,
+        glutesXP INTEGER,
+        calfsXP INTEGER,
+        hamstringXP INTEGER,
+        absXP INTEGER,
+        obliquesXP INTEGER,
+        
+        PRIMARY KEY(id)
     )
   `;
 
@@ -113,6 +131,8 @@ export const getUserData = async (): Promise<User | null> => {
       heatlh: userFromDB.health,
       xpToLevel: userFromDB.xpToLevel,
       xpMax: userFromDB.xpMax,
+      attackStat: userFromDB.attackStat,
+      curMuscleXP: userFromDB.curMuscleXP,
 
       stats: {
         chest: userFromDB.chest,
@@ -127,6 +147,21 @@ export const getUserData = async (): Promise<User | null> => {
         hamstring: userFromDB.hamstring,
         abs: userFromDB.abs,
         obliques: userFromDB.obliques, // typo in interface "obleques"
+      },
+
+      statsXP: {
+        chestXP: userFromDB.chestXP,
+        bicepXP: userFromDB.bicepXP,
+        tricepXP: userFromDB.tricepXP,
+        deltsXP: userFromDB.deltsXP,
+        latsXP: userFromDB.latsXP,
+        trapsXP: userFromDB.trapsXP,
+        quadsXP: userFromDB.quadsXP,
+        glutesXP: userFromDB.glutesXP,
+        calfsXP: userFromDB.calfsXP,
+        hamstringXP: userFromDB.hamstringXP,
+        absXP: userFromDB.absXP,
+        obliquesXP: userFromDB.obliquesXP,
       },
     };
     if (curUser != null) {
@@ -147,17 +182,20 @@ export const addUser = async (username: string) => {
     if (userResults == null) {
       //Freaking mathx
       //const xpMax = Math.pow(1/constanttMult, 2)
-      const result = await db.runAsync(
-        `INSERT OR IGNORE INTO UserData (
-        username, level, curXP, xpToLevel, xpMax, health,
+      const sql = `INSERT OR IGNORE INTO UserData (
+        username, level, curMuscleXP, xpToLevel, xpMax, attackStat, health,
         chest, bicep, tricep, delts, lats, traps,
-        quads, glutes, calfs, hamstring, abs, obliques
-      ) VALUES (?, 1, 0, 0, 100, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)`,
-        [username]
-      );
+        quads, glutes, calfs, hamstring, abs, obliques,
+        chestXP, bicepXP, tricepXP, deltsXP, latsXP, trapsXP,
+        quadsXP, glutesXP, calfsXP, hamstringXP, absXP, obliquesXP
+      ) VALUES (?, 1, 0, 0, 100, 1, 1, 
+                1, 1, 1, 1, 1, 1, 1, 1, 
+                1, 1, 1, 1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1, 1, 1, 1)`;
+      const result = await db.runAsync(sql, [username]);
       return result.lastInsertRowId;
-    }else{
-      console.log("User is not null Womp Womp")
+    } else {
+      console.log("User is not null Womp Womp");
     }
   } catch (error) {
     console.error(error);

@@ -1,8 +1,9 @@
 import { Image } from "expo-image";
 import React, { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
-import { User } from "../Classes/user.types";
+import { MuscleGroup, MuscleGroupXP, User } from "../Classes/user.types";
 import { styles } from "../styles";
+import { muscleXPMax } from "../Helper/userHelper";
 
 export const Stats = ({
   curUser,
@@ -41,9 +42,10 @@ export const Stats = ({
             }}
           >
             <Text style={styles.nameTxt}>{curUser.username}</Text>
-            <Text style={styles.nameTxt}>HP: {curUser.heatlh}</Text>
+            {//<Text style={styles.nameTxt}>HP: {curUser.heatlh}</Text>
+            }
             <Text style={styles.nameTxt}>Level: {curUser.level}</Text>
-            <Text style={styles.nameTxt}>XP: {curUser.xpToLevel}</Text>
+            <Text style={styles.nameTxt}>Attack: {curUser.attackStat}</Text>
           </View>
           <View style={styles.xpBar} key={curUser.xpToLevel}>
             <View
@@ -53,28 +55,42 @@ export const Stats = ({
                 height: "100%",
               }}
             ></View>
-                        <Text style={{
-                color: 'white',
-                fontSize: 15,
-                fontStyle: 'italic',
-                position: 'relative',
-                right: '0%',
-                left: '45%',
-                bottom: '90%'
-                
-            }}>{curUser.xpToLevel}/{curUser.xpMax}</Text>
+                <Text style={styles.xpText}>
+                  {curUser.xpToLevel}/{curUser.xpMax}
+                </Text>
           </View>
         </View>
       </View>
 
       <ScrollView style={styles.statsInfo}>
         {Object.entries(curUser.stats).map(([muscleName, lvl]) => {
+          const [xpPercent, setPercent] = useState()
+          const curMuscleXPMax = muscleXPMax(curUser.stats[muscleName as keyof MuscleGroup])
+          const muscleXPStr = muscleName + "XP"
+          const curWidth = (curUser.statsXP[muscleXPStr as keyof MuscleGroupXP]/curMuscleXPMax) * 100
           return (
-            <View key={muscleName} style={{ flexDirection: "row", padding: 3 }}>
+            <View key={muscleName} style={{ flexDirection: "row", padding: 3}}>
               <Text style={styles.statsTxt}>
                 {muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}:{" "}
                 {lvl}
               </Text>
+              <View style={{
+                width: "60%",
+                height: 25,
+                zIndex: 0,
+                borderWidth: 1
+              }}>
+                <View
+                style={{
+                  backgroundColor: 'orange',
+                  width: `${curWidth}%`,
+                  height: "100%"
+                }}
+                ></View>
+                <Text style={styles.xpText2}>
+                  {curUser.statsXP[muscleXPStr as keyof MuscleGroupXP]}/{curMuscleXPMax}
+                </Text>
+              </View>
             </View>
           );
         })}

@@ -116,6 +116,8 @@ const finalCalc = (sets: string, reps: string, weight: string) => {
   // need xp max for muscles
 };
 
+
+//this needs to be in a new file maybe userHelper or specific file
 const updateStats = async (
   curUser: User,
   setUser: (user: User) => void,

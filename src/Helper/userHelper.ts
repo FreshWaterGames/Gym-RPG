@@ -12,6 +12,8 @@ export const levelUp = async (
   const nextXP = Math.pow(curUser.level, 3) * curUser.xpMax;
   await updateUserData("xpMax", nextXP);
 
+
+  //I dont think this is updating user on screen
   setCurUser({
     ...curUser,
     level: curUser.level + 1,
@@ -45,7 +47,7 @@ export const getAttackStat = (curUser: User) => {
     muscleLen += 1;
   }
 
-  const attackFinal = attackSum / muscleLen;
+  const attackFinal = (curUser.level * attackSum) / (muscleLen + curUser.level);
   if (attackFinal < 1) {
     return 1;
   } else {

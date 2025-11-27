@@ -98,7 +98,24 @@ export const styles = StyleSheet.create({
         zIndex: 0,
         position: 'relative'
     },
-
+    xpText:{
+        color: 'white',
+        fontSize: 15,
+        fontStyle: 'italic',
+        position: 'relative',
+        right: '0%',
+        left: '45%',
+        bottom: '90%'
+    },
+    xpText2:{
+        color: 'black',
+        fontSize: 15,
+        fontStyle: 'italic',
+        position: 'relative',
+        right: '0%',
+        left: '45%',
+        bottom: '90%'
+    },
     input: {
         height: 40,
         width: '22.22%',

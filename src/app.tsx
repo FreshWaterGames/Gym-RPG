@@ -2,12 +2,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { User } from "./Classes/user.types";
 import {
-  addUser,
-  connectToDatabase,
   createTables,
-  getUserData,
-  printUserData
+  printUserData,
+  removeAllUsers,
+  removeTable
 } from "./database/userData";
+import { initDatabase } from "./Helper/userHelper";
 import { styles } from "./styles";
 import { IdleView } from "./Views/IdleView";
 import { SettingsView } from "./Views/SettingsView";
@@ -21,6 +21,8 @@ const TEMP_USER: User = {
   level: 1,
   heatlh: 1,
   xpMax: 1,
+  attackStat: 1,
+  curMuscleXP: 1,
   stats: {
     chest: 1,
     bicep: 17,
@@ -35,6 +37,21 @@ const TEMP_USER: User = {
     abs: 1,
     obliques: 1,
   },
+  statsXP: {
+    chestXP: 1,
+    bicepXP: 1,
+    tricepXP: 1,
+    deltsXP: 1,
+    latsXP: 1,
+    trapsXP: 1,
+    quadsXP: 1,
+    glutesXP: 1,
+    calfsXP: 1,
+    hamstringXP: 1,
+    absXP: 1,
+    obliquesXP: 1,
+  },
+
   xpToLevel: 1,
 };
 
@@ -63,7 +80,7 @@ const App = () => {
   //in database folder
   const loadData = useCallback(async () => {
     try {
-       await initDatabase({curUser, setLoading, setUser})
+      await initDatabase({ curUser, setLoading, setUser });
     } catch (error) {
       console.log(error);
       throw Error("Somehting went wrong in loadData");
@@ -105,30 +122,13 @@ export const TabBar = ({
   );
 };
 
-export const initDatabase = async ({
-  curUser,
-  setLoading,
-  setUser,
-}: {
-  setLoading: (isLoading: Boolean) => void;
-  setUser: (curUser: User) => void;
-  curUser: User
-}) => {
-  const db = await connectToDatabase();
-  //await removeTable();
+const resetDB = async (curUser: User) => {
+  await removeAllUsers();
+  await removeTable();
   await createTables();
-  //await addUser(curUser)
-  //await getTable(db)
-  const tempUser = await getUserData();
-  if (tempUser != null) {
-    //console.log(tempUser)
-    setLoading(false);
-    setUser(tempUser);
-  }
-  else{
-    await addUser(curUser.username)
-    await printUserData()
-  }
+  await removeAllUsers();
+  printUserData();
+  //await addUser(curUser.username)
 };
 
 export default App;

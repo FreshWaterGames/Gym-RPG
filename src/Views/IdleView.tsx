@@ -39,7 +39,10 @@ export const IdleView = ({
         onPress={async () => {
           //Needs to be monster reset function
           //Like resetMonster() or something
-          const newHealth = curMonster.health - 1;
+          let newHealth = curMonster.health - curUser.attackStat;
+          if(newHealth <= 0){
+            newHealth = 0
+          }
           setMonster({
             ...curMonster,
             health: newHealth,
@@ -134,7 +137,8 @@ const checkXP = async({curUser, setCurUser, curMonster, setMonster} : {curUser: 
       Math.round(xpWeight * curMonster.level + lastXP)
     );
 
-    //need to check if can level up
+    //need to check if can level up, if false dont level up
+    //else level up
     if (levelCheck(xpCalc, curUser.xpMax) == false) {
       await updateUserData("xpToLevel", xpCalc);
       setCurUser({

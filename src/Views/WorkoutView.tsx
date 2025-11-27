@@ -2,9 +2,9 @@ import CheckBox from 'expo-checkbox';
 import React, { useState } from "react";
 import { Keyboard, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Calendar } from 'react-native-calendars';
-import { MuscleGroup, User } from '../Classes/user.types';
+import { MuscleGroup, MuscleGroupXP, User } from '../Classes/user.types';
 import { updateUserData } from '../database/userData';
-
+import { checkMuscleLvlUp, muscleXPMax } from "../Helper/userHelper";
 import { styles } from '../styles';
 
 // Temp workout data storing till database stuff blah blah blah
@@ -15,19 +15,20 @@ type WorkoutEntry = {
     weight: string;
     timestamp: number;
 };
-
 export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void}) => {
     // Current view state
     const [currView, setCurrView] = useState<Number>(0); // Which screen state is being shown
     
     // Workout form states
     const [checkedMuscles, setCheckedMuscles] = useState<{[key: string]: boolean}>({});
+    // saves the string value of the checked box
     const [muscleString, setMuscleString] = useState('');
+
     const [setsVal, setSetsVal] = useState('');
     const [repsVal, setRepVal] = useState('');
     const [weightVal, setWeightVal] = useState('');
     const [savedWorkout, setSavedWorkout] = useState('');
-    
+
     // Calendar states
     const [selectedDate, setSelectedDate] = useState('');
     const [markedDates, setMarkedDates] = useState<{[key: string]: any}>({});
@@ -35,17 +36,22 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
     // date as the key
     const [workoutsByDate, setWorkoutsByDate] = useState<{[key: string]: WorkoutEntry[]}>({});
     
-    // Workout view
-    const renderWorkoutView = () => (
+    
+    
+   const renderWorkoutView = () => (
         <View>
-            <View style={{flexDirection: "row", marginBottom: 10}}>
+            <View style={{
+                flexDirection: "row",
+                }}>
+
                 <TextInput style={styles.input}
-                    placeholder="Sets"
-                    placeholderTextColor={"grey"}
-                    keyboardType="numeric"
-                    value={setsVal}
-                    onChangeText={setSetsVal}
-                />
+                placeholder="Sets"
+                placeholderTextColor={"grey"}
+                keyboardType="default"
+                value={setsVal}
+                onChangeText={setSetsVal}
+                >
+                </TextInput>
 
                 <TextInput style={styles.input}
                     placeholder="Reps"
@@ -240,12 +246,64 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
     )
 }
 
-const finalCalc = (sets: string, reps: string, weight:string) => {
-    const setsValue = Number(sets);
-    const repsValue = Number(reps);
-    const weightValue = Number(weight);
+const finalCalc = (sets: string, reps: string, weight: string) => {
+  const setsValue = Number(sets);
+  const repsValue = Number(reps);
+  const weightValue = Number(weight);
 
-    return (setsValue + repsValue) + weightValue
+  const xpMultiplier = 0.2;
+  return setsValue * repsValue * weightValue * xpMultiplier;
 
-    // need xp max for muscles
-}
+  // need xp max for muscles
+};
+
+const updateStats = async (
+  curUser: User,
+  setUser: (user: User) => void,
+  muscleVal: number,
+  muscleStr: string
+) => {
+  const muscleXP = muscleStr + "XP";
+  let newXP = curUser.statsXP[muscleXP as keyof MuscleGroupXP] + muscleVal;
+  let xpMax = muscleXPMax(curUser.stats[muscleStr as keyof MuscleGroup]);
+  
+  //do{
+  //If user didnt level up just update
+  if (checkMuscleLvlUp(newXP, xpMax) == false) {
+    setUser({
+      ...curUser,
+      statsXP: {
+        ...curUser.statsXP,
+        [muscleXP]: newXP,
+      },
+    });
+
+    //console.log(muscleString);
+    // data update
+    await updateUserData(muscleXP, newXP);
+  }
+  else{
+    //This levels up the user by 1 if xp is over
+    const newLVL = curUser.stats[muscleStr as keyof MuscleGroup] + 1
+    //This gets the left over xp after level up
+    const remainderXP = newXP % xpMax
+    setUser({
+        ...curUser,
+
+        stats: {
+          ...curUser.stats,
+          [muscleStr]: newLVL,
+        },
+        statsXP: {
+            ...curUser.statsXP,
+            [muscleXP]: remainderXP,
+        },
+    });
+    await updateUserData(muscleStr, newLVL)
+    await updateUserData(muscleXP, remainderXP)
+
+    newXP = curUser.statsXP[muscleXP as keyof MuscleGroupXP] + muscleVal;
+    xpMax = muscleXPMax(curUser.stats[muscleStr as keyof MuscleGroup]);
+  }
+  //} while(checkMuscleLvlUp(newXP, xpMax) == true)
+};

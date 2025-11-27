@@ -47,7 +47,7 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
                 <TextInput style={styles.input}
                 placeholder="Sets"
                 placeholderTextColor={"grey"}
-                keyboardType="default"
+                keyboardType="numeric"
                 value={setsVal}
                 onChangeText={setSetsVal}
                 >
@@ -71,7 +71,7 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
             </View>
 
             {/* Muscle Buttons */}
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: 100}}>
+            <View style={styles.LargeWorkoutButton}>
                 {Object.entries(curUser.stats).map(([muscleName]) => { 
                     return(
                         <View 
@@ -107,39 +107,11 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
                         const finalVal = finalCalc(setsVal, repsVal, weightVal);
                         const newMuscleValue = Number(curUser.stats[muscleString as keyof MuscleGroup] + finalVal);
 
-                        setCurUser({
-                            ...curUser, stats: {
-                                ...curUser.stats, [muscleString]: newMuscleValue
-                            }
-                        });
-
-                        console.log(muscleString);
-
                         // data update
-                        updateUserData(muscleString, newMuscleValue)
+                        updateStats(curUser, setCurUser, newMuscleValue, muscleString)
 
                         // mark date on calander
-                        const now = new Date();
-                        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-
-                        const entry: WorkoutEntry = {
-                            muscle: muscleString,
-                            sets: setsVal,
-                            reps: repsVal,
-                            weight: weightVal,
-                            timestamp: Date.now()
-                        };
-
-                        setWorkoutsByDate(prev => ({
-                            ...prev,
-                            [today]: [...(prev[today] || []), entry]
-                        }));
-
-
-                        setMarkedDates({
-                            ...markedDates,
-                            [today]: { marked: true, dotColor: 'green'}
-                        });
+                        calanderUpdate(muscleString, setsVal, repsVal, weightVal, workoutsByDate, setWorkoutsByDate, markedDates, setMarkedDates)
 
                         // Clear all inputs
                         setSetsVal('');
@@ -183,12 +155,7 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
                                 {workoutsByDate[selectedDate].map((workout, index) => (
                                     <View 
                                         key={index} 
-                                        style={{ 
-                                            backgroundColor: '#f0f0f0', 
-                                            padding: 15, 
-                                            marginBottom: 10, 
-                                            borderRadius: 8 
-                                        }}
+                                        style={styles.workoutEntires}
                                     >
                                         <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>
                                             {workout.muscle.charAt(0).toUpperCase() + workout.muscle.slice(1)}
@@ -246,6 +213,10 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
     )
 }
 
+
+
+// functions --------------------------------------------------------------------------------------------
+
 const finalCalc = (sets: string, reps: string, weight: string) => {
   const setsValue = Number(sets);
   const repsValue = Number(reps);
@@ -269,6 +240,7 @@ const updateStats = async (
   
   //do{
   //If user didnt level up just update
+  // stats change
   if (checkMuscleLvlUp(newXP, xpMax) == false) {
     setUser({
       ...curUser,
@@ -278,8 +250,7 @@ const updateStats = async (
       },
     });
 
-    //console.log(muscleString);
-    // data update
+    // database change
     await updateUserData(muscleXP, newXP);
   }
   else{
@@ -307,3 +278,42 @@ const updateStats = async (
   }
   //} while(checkMuscleLvlUp(newXP, xpMax) == true)
 };
+
+const calanderUpdate = (
+    muscleString: string,
+    setsVal: string,
+    repsVal: string,
+    weightVal: string,
+    workoutsByDate: {[key: string]: WorkoutEntry[]},
+    setWorkoutsByDate: (value: {[key: string]: WorkoutEntry[]}) => void,
+    markedDates: {[key: string]: any},
+    setMarkedDates: (value: {[key: string]: any}) => void
+
+) => {
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+    // workout entry
+    const entry: WorkoutEntry = {
+        muscle: muscleString,
+        sets: setsVal,
+        reps: repsVal,
+        weight: weightVal,
+        timestamp: Date.now()
+    };
+
+    // setting the date key to input the workout entry
+    const updatedWorkouts = {
+        ...workoutsByDate,
+        [today]: [...(workoutsByDate[today] || []), entry]
+    };
+
+    setWorkoutsByDate(updatedWorkouts)
+
+
+    // setting the date key to place a marker
+    setMarkedDates({
+        ...markedDates,
+        [today]: { marked: true, dotColor: 'green'}
+    });
+}

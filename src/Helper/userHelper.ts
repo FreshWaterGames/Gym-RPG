@@ -1,7 +1,10 @@
 import { MuscleGroup, User } from "../Classes/user.types";
-import { updateUserData, connectToDatabase, createTables,
-  getUserData, addUser
- } from "../database/userData";
+import {
+  addUser,
+  connectToDatabase, createTables,
+  getUserData,
+  updateUserData
+} from "../database/userData";
 
 export const levelUp = async (
   curUser: User,
@@ -21,14 +24,11 @@ export const levelUp = async (
     xpMax: nextXP,
   });
 
-  const attackSt = getAttackStat(curUser)
-  console.log('attack stat update')
-  console.log(attackSt)
-  await updateUserData("attackStat", attackSt)
+  await updateUserData("attackStat", curUser.attackStat += 1)
 
   setCurUser({
     ...curUser,
-    attackStat: attackSt,
+    attackStat: curUser.attackStat += 1,
   })
 };
 
@@ -53,20 +53,11 @@ export const getAttackStat = (curUser: User) => {
   } else {
     return attackFinal;
   }
-  console.log("getting attack final")
-  console.log(attackFinal)
 };
 
-export const setAllStats = ({
-  curUser,
-  setUser,
-}: {
-  curUser: User;
-  setUser: (curUser: User) => void;
-}) => {
-  setUser({
-    ...curUser,
-    attackStat: getAttackStat(curUser),
+export const setAllStats = ({curUser,setUser,}: {curUser: User; setUser: (curUser: User) => void;}) => {
+ setUser({
+    ...curUser
   });
 };
 

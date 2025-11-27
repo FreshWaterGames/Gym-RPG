@@ -107,17 +107,10 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
                         const finalVal = finalCalc(setsVal, repsVal, weightVal);
                         const newMuscleValue = Number(curUser.stats[muscleString as keyof MuscleGroup] + finalVal);
 
-                        setCurUser({
-                            ...curUser, stats: {
-                                ...curUser.stats, [muscleString]: newMuscleValue
-                            }
-                        });
-
-                        console.log(muscleString);
-
                         // data update
-                        updateUserData(muscleString, newMuscleValue)
+                        updateStats(curUser, setCurUser,newMuscleValue, muscleString)
 
+                        //This needs to move to another file or atleast its own function
                         // mark date on calander
                         const now = new Date();
                         const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;

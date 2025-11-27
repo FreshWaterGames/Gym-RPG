@@ -106,7 +106,7 @@ export const printUserData = async () => {
 
 export const getSpecificVal = async (val: string) => {
   const results: any = await db.getAllAsync(
-    "SELECT xpToLevel FROM UserData WHERE id = 1"
+    `SELECT ${val} FROM UserData WHERE id = 1`
   );
   console.log(results[0].xpToLevel);
   return results[0].xpToLevel;

@@ -56,12 +56,28 @@ export const styles = StyleSheet.create({
         borderRadius: 12
         
     },
-   
-    
+
     tabsButtonTxt: {
-        color: 'white',
-        fontSize: 18,
-        padding: 1
+    color: 'white',
+    fontSize: 18,
+    padding: 1
+    },
+
+    updateButton: {
+    margin: 5,
+    padding: 5,
+    backgroundColor: '#007AFF',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 200
+    
+    },
+
+    updateButtonTxt: {
+    color: 'white',
+    fontSize: 40,
+    padding: 1
     },
 
     pfp: {
@@ -113,6 +129,13 @@ export const styles = StyleSheet.create({
         padding: 3, 
         width: '33.33%',
         alignItems: 'center'
+    },
+
+    checkboxTxt: {
+        fontSize: 20,
+        padding: 5,
+        fontWeight: 'bold',
+        color: '#0f172a'
     },
 
     fadeView: {

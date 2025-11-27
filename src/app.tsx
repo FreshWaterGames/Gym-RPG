@@ -2,15 +2,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { User } from "./Classes/user.types";
 import {
-  addUser,
-  connectToDatabase,
   createTables,
-  getUserData,
   printUserData,
   removeAllUsers,
-  removeTable,
+  removeTable
 } from "./database/userData";
-import { setAllStats, initDatabase } from "./Helper/userHelper";
+import { initDatabase } from "./Helper/userHelper";
 import { styles } from "./styles";
 import { IdleView } from "./Views/IdleView";
 import { SettingsView } from "./Views/SettingsView";

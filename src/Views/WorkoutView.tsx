@@ -252,11 +252,7 @@ const finalCalc = (sets: string, reps: string, weight: string) => {
 
 
 //this needs to be in a new file maybe userHelper or specific file
-const updateStats = async (
-  curUser: User,
-  setUser: (user: User) => void,
-  muscleVal: number,
-  muscleStr: string
+const updateStats = async (curUser: User, setUser: (user: User) => void, muscleVal: number, muscleStr: string
 ) => {
   const muscleXP = muscleStr + "XP";
   let newXP = curUser.statsXP[muscleXP as keyof MuscleGroupXP] + muscleVal;

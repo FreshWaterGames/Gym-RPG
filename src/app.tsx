@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { User } from "./Classes/user.types";
 import {
   createTables,
-  printUserData,
+  getTable,
   removeAllUsers,
   removeTable
 } from "./database/userData";
@@ -23,6 +23,7 @@ const TEMP_USER: User = {
   xpMax: 1,
   attackStat: 1,
   curMuscleXP: 1,
+  gold: 0, 
   stats: {
     chest: 1,
     bicep: 17,
@@ -61,6 +62,7 @@ const App = () => {
   const [isLoading, setLoading] = useState<Boolean>(true);
   //const [db, setDB] = useState<SQLiteDatabase | null>(null)
 
+  //resetDB(curUser)
   const renderView = () => {
     switch (curView) {
       case 0:
@@ -125,10 +127,15 @@ export const TabBar = ({
 const resetDB = async (curUser: User) => {
   await removeAllUsers();
   await removeTable();
+  console.log("removed table")
   await createTables();
+  console.log("Created table")
+  await getTable();
+  /*
   await removeAllUsers();
   printUserData();
-  //await addUser(curUser.username)
+  await addUser(curUser.username)
+  */
 };
 
 export default App;

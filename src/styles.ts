@@ -88,6 +88,16 @@ export const styles = StyleSheet.create({
         borderColor: 'white'
     },
 
+    coin: {
+        top: 5,
+        left: 5,
+        width: 30, 
+        height: 30 ,      
+        borderRadius: 50, 
+        borderWidth: 2,       
+        borderColor: 'white'
+    },
+
     xpBar:{
         borderWidth: 1,
         borderColor: 'white',

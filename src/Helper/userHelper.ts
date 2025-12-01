@@ -12,6 +12,7 @@ export const levelUp = async (
 ) => {
   await updateUserData("level", curUser.level + 1);
   await updateUserData("xpToLevel", 0);
+  //Sets next xpMAX
   const nextXP = Math.pow(curUser.level, 3) * curUser.xpMax;
   await updateUserData("xpMax", nextXP);
 

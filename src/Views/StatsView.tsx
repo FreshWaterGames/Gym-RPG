@@ -2,8 +2,8 @@ import { Image } from "expo-image";
 import React, { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { MuscleGroup, MuscleGroupXP, User } from "../Classes/user.types";
-import { styles } from "../styles";
 import { muscleXPMax } from "../Helper/userHelper";
+import { styles } from "../styles";
 
 export const Stats = ({
   curUser,
@@ -46,6 +46,11 @@ export const Stats = ({
             }
             <Text style={styles.nameTxt}>Level: {curUser.level}</Text>
             <Text style={styles.nameTxt}>Attack: {curUser.attackStat}</Text>
+            <View style={{flexDirection: "row",}}>
+            <Image source={require("../assets/images/coin.png")}
+                   style={styles.coin}/>
+                   <Text style={styles.nameTxt}>: {curUser.gold}</Text>
+            </View>
           </View>
           <View style={styles.xpBar} key={curUser.xpToLevel}>
             <View

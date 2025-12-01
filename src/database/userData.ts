@@ -12,6 +12,7 @@ export const removeTable = async () => {
 };
 //Table Name UserData
 export const createTables = async () => {
+  console.log("creating table")
   const userDataQuery = `
     CREATE TABLE IF NOT EXISTS UserData (
         id INTEGER DEFAULT 1,
@@ -22,6 +23,7 @@ export const createTables = async () => {
         xpMax INTEGER,
         attackStat INTEGER,
         health INTEGER,
+        gold INTEGER,
         
         -- Muscle Base Stats
         chest INTEGER,
@@ -133,6 +135,8 @@ export const getUserData = async (): Promise<User | null> => {
       xpMax: userFromDB.xpMax,
       attackStat: userFromDB.attackStat,
       curMuscleXP: userFromDB.curMuscleXP,
+      gold: userFromDB.gold,
+
 
       stats: {
         chest: userFromDB.chest,
@@ -176,22 +180,25 @@ export const getUserData = async (): Promise<User | null> => {
 
 //This doenst need to run more than once just to get the player in
 export const addUser = async (username: string) => {
-  const constanttMult = 2.39;
+  //const constanttMult = 2.39;
+  console.log("adding user")
   try {
     const userResults = await getUserData();
     if (userResults == null) {
+      console.log("userResults is null")
       //Freaking mathx
       //const xpMax = Math.pow(1/constanttMult, 2)
       const sql = `INSERT OR IGNORE INTO UserData (
-        username, level, curMuscleXP, xpToLevel, xpMax, attackStat, health,
+        username, level, curMuscleXP, xpToLevel, xpMax, attackStat, health, gold,
         chest, bicep, tricep, delts, lats, traps,
         quads, glutes, calfs, hamstring, abs, obliques,
         chestXP, bicepXP, tricepXP, deltsXP, latsXP, trapsXP,
         quadsXP, glutesXP, calfsXP, hamstringXP, absXP, obliquesXP
-      ) VALUES (?, 1, 0, 0, 100, 1, 1, 
-                1, 1, 1, 1, 1, 1, 1, 1, 
-                1, 1, 1, 1, 1, 1, 1, 1,
-                1, 1, 1, 1, 1, 1, 1, 1)`;
+      ) VALUES (?, 1, 0, 0, 100, 1, 1, 0,  -- User Stuff 
+                1, 1, 1, 1, 1, 1,       -- First row of muslces
+                1, 1, 1, 1, 1, 1,       -- Second row of Muscles
+                0, 0, 0, 0, 0, 0,       -- First row of xp
+                0, 0, 0, 0, 0, 0)       -- Second row of xp`; 
       const result = await db.runAsync(sql, [username]);
       return result.lastInsertRowId;
     } else {

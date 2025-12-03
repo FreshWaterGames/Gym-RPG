@@ -124,6 +124,9 @@ export const TabBar = ({
   );
 };
 
+
+//Be carful when using this makesure databse is right
+//probably need to reset user after 
 const resetDB = async (curUser: User) => {
   await removeAllUsers();
   await removeTable();

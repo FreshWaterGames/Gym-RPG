@@ -39,5 +39,6 @@ export interface User {
     xpMax: number,
     attackStat: number,
     curMuscleXP: number,
+    gold: number
     
 }

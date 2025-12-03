@@ -110,6 +110,7 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
                         // data update
                         updateStats(curUser, setCurUser, newMuscleValue, muscleString)
 
+                        //This needs to move to another file or atleast its own function
                         // mark date on calander
                         calanderUpdate(muscleString, setsVal, repsVal, weightVal, workoutsByDate, setWorkoutsByDate, markedDates, setMarkedDates)
 
@@ -228,11 +229,9 @@ const finalCalc = (sets: string, reps: string, weight: string) => {
   // need xp max for muscles
 };
 
-const updateStats = async (
-  curUser: User,
-  setUser: (user: User) => void,
-  muscleVal: number,
-  muscleStr: string
+
+//this needs to be in a new file maybe userHelper or specific file
+const updateStats = async (curUser: User, setUser: (user: User) => void, muscleVal: number, muscleStr: string
 ) => {
   const muscleXP = muscleStr + "XP";
   let newXP = curUser.statsXP[muscleXP as keyof MuscleGroupXP] + muscleVal;

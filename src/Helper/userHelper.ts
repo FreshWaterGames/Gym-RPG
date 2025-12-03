@@ -1,7 +1,10 @@
 import { MuscleGroup, User } from "../Classes/user.types";
-import { updateUserData, connectToDatabase, createTables,
-  getUserData, addUser
- } from "../database/userData";
+import {
+  addUser,
+  connectToDatabase, createTables,
+  getUserData,
+  updateUserData
+} from "../database/userData";
 
 export const levelUp = async (
   curUser: User,
@@ -9,17 +12,25 @@ export const levelUp = async (
 ) => {
   await updateUserData("level", curUser.level + 1);
   await updateUserData("xpToLevel", 0);
+  //Sets next xpMAX
   const nextXP = Math.pow(curUser.level, 3) * curUser.xpMax;
   await updateUserData("xpMax", nextXP);
-  const attackSt = await getAttackStat(curUser)
 
+
+  //I dont think this is updating user on screen
   setCurUser({
     ...curUser,
     level: curUser.level + 1,
     xpToLevel: 0,
     xpMax: nextXP,
-    attackStat: attackSt,
   });
+
+  await updateUserData("attackStat", curUser.attackStat += 1)
+
+  setCurUser({
+    ...curUser,
+    attackStat: curUser.attackStat += 1,
+  })
 };
 
 export const levelCheck = (xpToLevel: number, xpMax: number) => {
@@ -37,26 +48,17 @@ export const getAttackStat = (curUser: User) => {
     muscleLen += 1;
   }
 
-  const attackFinal = attackSum / muscleLen;
+  const attackFinal = (curUser.level * attackSum) / (muscleLen + curUser.level);
   if (attackFinal < 1) {
     return 1;
   } else {
     return attackFinal;
   }
-  console.log("getting attack final")
-  console.log(attackFinal)
 };
 
-export const setAllStats = ({
-  curUser,
-  setUser,
-}: {
-  curUser: User;
-  setUser: (curUser: User) => void;
-}) => {
-  setUser({
-    ...curUser,
-    attackStat: getAttackStat(curUser),
+export const setAllStats = ({curUser,setUser,}: {curUser: User; setUser: (curUser: User) => void;}) => {
+ setUser({
+    ...curUser
   });
 };
 

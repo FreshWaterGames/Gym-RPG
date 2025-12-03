@@ -158,6 +158,19 @@ export const styles = StyleSheet.create({
     fadeText: {
         fontSize: 15,
         padding: 10
+    },
+
+    LargeWorkoutButton: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 100
+    },
+
+    workoutEntires: {
+        backgroundColor: '#f0f0f0', 
+        padding: 15, 
+        marginBottom: 10, 
+        borderRadius: 8 
     }
 
 });

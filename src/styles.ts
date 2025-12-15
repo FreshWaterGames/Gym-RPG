@@ -171,6 +171,13 @@ export const styles = StyleSheet.create({
         padding: 15, 
         marginBottom: 10, 
         borderRadius: 8 
-    }
+    },
+
+    statXPbackground: {
+        width: "60%",
+        height: 25,
+        zIndex: 0,
+        borderWidth: 1,
+    },
 
 });

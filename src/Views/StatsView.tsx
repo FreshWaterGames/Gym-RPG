@@ -69,7 +69,7 @@ export const Stats = ({
 
       <ScrollView style={styles.statsInfo}>
         {Object.entries(curUser.stats).map(([muscleName, lvl]) => {
-          const [xpPercent, setPercent] = useState()
+          //const [xpPercent, setPercent] = useState()
           const curMuscleXPMax = muscleXPMax(curUser.stats[muscleName as keyof MuscleGroup])
           const muscleXPStr = muscleName + "XP"
           const curWidth = (curUser.statsXP[muscleXPStr as keyof MuscleGroupXP]/curMuscleXPMax) * 100
@@ -79,12 +79,7 @@ export const Stats = ({
                 {muscleName.charAt(0).toUpperCase() + muscleName.slice(1)}:{" "}
                 {lvl}
               </Text>
-              <View style={{
-                width: "60%",
-                height: 25,
-                zIndex: 0,
-                borderWidth: 1
-              }}>
+              <View style={styles.statXPbackground}>
                 <View
                 style={{
                   backgroundColor: 'orange',
@@ -103,3 +98,49 @@ export const Stats = ({
     </View>
   );
 };
+
+interface pulseProps {
+  children: React.ReactNode;
+  style?: any; //Define style if possible
+}
+
+/*
+const pulseView = (props: pulseProps) => {
+  //Initial value for opacity is 0 so it can come into view
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const { startFade, onFadeComplete } = props;
+  useEffect(() => {
+    if (startFade == true) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }).start(({ finished }) => {
+        if (finished) {
+          const timer = setTimeout(() => {
+            Animated.timing(fadeAnim, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }).start(({finished}) => {
+              if(finished && onFadeComplete)
+              onFadeComplete();
+            });
+          }, 2000);
+        }
+      });
+    }
+  }, [startFade, fadeAnim, onFadeComplete]);
+
+  return (
+    <Animated.View
+      style={{
+        ...props.style,
+        opacity: fadeAnim, //Binding
+      }}
+    >
+      {props.children}
+    </Animated.View>
+  );
+};
+*/

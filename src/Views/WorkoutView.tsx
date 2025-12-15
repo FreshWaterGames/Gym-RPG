@@ -2,9 +2,8 @@ import CheckBox from 'expo-checkbox';
 import React, { useState } from "react";
 import { Keyboard, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Calendar } from 'react-native-calendars';
-import { MuscleGroup, MuscleGroupXP, User } from '../Classes/user.types';
-import { updateUserData } from '../database/userData';
-import { checkMuscleLvlUp, muscleXPMax } from "../Helper/userHelper";
+import { MuscleGroup, User } from '../Classes/user.types';
+import { updateStats } from "../Helper/userHelper";
 import { styles } from '../styles';
 
 // Temp workout data storing till database stuff blah blah blah
@@ -230,6 +229,7 @@ const finalCalc = (sets: string, reps: string, weight: string) => {
 };
 
 
+/*
 //this needs to be in a new file maybe userHelper or specific file
 const updateStats = async (curUser: User, setUser: (user: User) => void, muscleVal: number, muscleStr: string
 ) => {
@@ -259,7 +259,6 @@ const updateStats = async (curUser: User, setUser: (user: User) => void, muscleV
     const remainderXP = newXP % xpMax
     setUser({
         ...curUser,
-
         stats: {
           ...curUser.stats,
           [muscleStr]: newLVL,
@@ -271,12 +270,12 @@ const updateStats = async (curUser: User, setUser: (user: User) => void, muscleV
     });
     await updateUserData(muscleStr, newLVL)
     await updateUserData(muscleXP, remainderXP)
-
     newXP = curUser.statsXP[muscleXP as keyof MuscleGroupXP] + muscleVal;
     xpMax = muscleXPMax(curUser.stats[muscleStr as keyof MuscleGroup]);
   }
   //} while(checkMuscleLvlUp(newXP, xpMax) == true)
 };
+*/
 
 const calanderUpdate = (
     muscleString: string,

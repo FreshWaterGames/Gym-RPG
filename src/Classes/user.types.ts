@@ -40,5 +40,4 @@ export interface User {
     attackStat: number,
     curMuscleXP: number,
     gold: number
-    
 }

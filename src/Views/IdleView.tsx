@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
 import { Monster } from "../Classes/monster.types";
 import { User } from "../Classes/user.types";
-import { getSpecificVal, updateUserData } from "../database/userData";
-import { levelCheck, levelUp } from "../Helper/userHelper";
+import { updateUserData } from "../database/userData";
 import { styles } from "../styles";
 
 const temp_Monster: Monster = {
@@ -18,6 +17,7 @@ export const IdleView = ({
   setCurUser: (curUser: User) => void;
 }) => {
   const [curMonster, setMonster] = useState<Monster>(temp_Monster);
+  const [startFade, setFade] = useState<Boolean>(false)
   return (
     <View
       style={{
@@ -37,27 +37,7 @@ export const IdleView = ({
       </Text>
       <TouchableOpacity
         onPress={async () => {
-          //Needs to be monster reset function
-          //Like resetMonster() or something
-          let newHealth = curMonster.health - curUser.attackStat;
-          if(newHealth <= 0){
-            newHealth = 0
-          }
-          setMonster({
-            ...curMonster,
-            health: newHealth,
-          });
-
-          {
-            if (newHealth == 0) {
-              try {
-                checkXP({curUser, setCurUser, curMonster, setMonster})
-              }
-              catch(error){
-                console.log(error)
-              }
-            }
-          }
+          updateMonsterHealth({ curUser, setCurUser, curMonster, setMonster, startFade, setFade });
         }}
       >
         <Text
@@ -66,55 +46,52 @@ export const IdleView = ({
             textAlign: "center",
           }}
         >
-          {
-            //Da monster
-          }
+          { /* Da Monster */ }
           🧌
         </Text>
       </TouchableOpacity>
-      <FadeInView health={curMonster.health} style={styles.fadeView}>
-        <Text style={styles.fadeText}>
-          + {15 * 2.39 * curMonster.level} XP!
-        </Text>
+      <FadeInView 
+        startFade={startFade} 
+        style={styles.fadeView} 
+        onFadeComplete={() => setFade(false)}>
+        <Text style={styles.fadeText}>+ {curMonster.level * 5} Gold!</Text>
       </FadeInView>
-      {levelCheck(curUser.xpToLevel, curUser.xpMax) 
-      ? <FadeInView health={0}>
-          <Text>Leveled Up to level {curUser.level}!</Text>
-      </FadeInView>
-      : <View></View>}
     </View>
   );
 };
 
-
 interface FadeInProps {
   children: React.ReactNode;
   style?: any; //Define style if possible
-  health: number; //this is what triggers animation
+  startFade: Boolean; //this is what triggers animation,
+  onFadeComplete?: () => void;
 }
 const FadeInView = (props: FadeInProps) => {
   //Initial value for opacity is 0 so it can come into view
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const { health } = props;
+  const { startFade, onFadeComplete } = props;
   useEffect(() => {
-    if (health <= 0) {
+    if (startFade == true) {
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 1000,
+        duration: 800,
         useNativeDriver: true,
       }).start(({ finished }) => {
         if (finished) {
           const timer = setTimeout(() => {
             Animated.timing(fadeAnim, {
               toValue: 0,
-              duration: 500,
+              duration: 300,
               useNativeDriver: true,
-            }).start();
+            }).start(({finished}) => {
+              if(finished && onFadeComplete)
+              onFadeComplete();
+            });
           }, 2000);
         }
       });
     }
-  }, [health, fadeAnim]);
+  }, [startFade, fadeAnim, onFadeComplete]);
 
   return (
     <Animated.View
@@ -128,8 +105,54 @@ const FadeInView = (props: FadeInProps) => {
   );
 };
 
-const checkXP = async({curUser, setCurUser, curMonster, setMonster} : {curUser: User, setCurUser: (curUser: User) => void, curMonster: Monster, setMonster: (curMonster: Monster) => void}) => {
+const updateMonsterHealth = async ({
+  curUser,
+  setCurUser,
+  curMonster,
+  setMonster,
+  startFade,
+  setFade,
+}: {
+  curUser: User;
+  setCurUser: (curUser: User) => void;
+  curMonster: Monster;
+  setMonster: (curMonster: Monster) => void;
+  startFade: Boolean,
+  setFade: (startFade: Boolean) => void;
+}) => {
+  let newHealth = curMonster.health - curUser.attackStat;
+  if (newHealth <= 0) {
+    try {
+      await updateGold({ curUser, setCurUser, curMonster, setMonster });
+      setFade(true)
+    } catch (error) {
+      console.log(error);
+    }
+    setMonster({
+      ...curMonster,
+      health: 30,
+    });
+  } else {
+    setMonster({
+      ...curMonster,
+      health: newHealth,
+    });
+  }
+};
+
+const updateGold = async ({
+  curUser,
+  setCurUser,
+  curMonster,
+  setMonster,
+}: {
+  curUser: User;
+  setCurUser: (curUser: User) => void;
+  curMonster: Monster;
+  setMonster: (curMonster: Monster) => void;
+}) => {
   try {
+    /*
     const lastXP = await getSpecificVal("xpToLevel");
     //Const for xp calc
     const xpWeight = 15 * 2.39;
@@ -137,6 +160,7 @@ const checkXP = async({curUser, setCurUser, curMonster, setMonster} : {curUser: 
       Math.round(xpWeight * curMonster.level + lastXP)
     );
 
+    
     //need to check if can level up, if false dont level up
     //else level up
     if (levelCheck(xpCalc, curUser.xpMax) == false) {
@@ -146,8 +170,18 @@ const checkXP = async({curUser, setCurUser, curMonster, setMonster} : {curUser: 
         xpToLevel: xpCalc,
       });
     } else {
+      /*
       levelUp(curUser, setCurUser);
     }
+    */
+    const newGold = curMonster.level * 5 + curUser.gold;
+    console.log(`gold: ${newGold}`);
+    //Need to make this a helper function
+    updateUserData("gold", newGold);
+    setCurUser({
+      ...curUser,
+      gold: newGold,
+    });
 
     setMonster({
       ...curMonster,
@@ -156,4 +190,4 @@ const checkXP = async({curUser, setCurUser, curMonster, setMonster} : {curUser: 
   } catch (error) {
     console.log(error);
   }
-}
+};

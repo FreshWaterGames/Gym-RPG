@@ -1,37 +1,23 @@
-import { MuscleGroup, User } from "../Classes/user.types";
+import { MuscleGroup, MuscleGroupXP, User } from "../Classes/user.types";
 import {
   addUser,
   connectToDatabase, createTables,
-  getUserData,
-  updateUserData
+  getUserData, updateUserData
 } from "../database/userData";
 
-export const levelUp = async (
-  curUser: User,
-  setCurUser: (curUser: User) => void
-) => {
-  await updateUserData("level", curUser.level + 1);
-  await updateUserData("xpToLevel", 0);
-  //Sets next xpMAX
-  const nextXP = Math.pow(curUser.level, 3) * curUser.xpMax;
-  await updateUserData("xpMax", nextXP);
-
-
-  //I dont think this is updating user on screen
-  setCurUser({
-    ...curUser,
-    level: curUser.level + 1,
-    xpToLevel: 0,
-    xpMax: nextXP,
-  });
-
-  await updateUserData("attackStat", curUser.attackStat += 1)
-
-  setCurUser({
-    ...curUser,
-    attackStat: curUser.attackStat += 1,
-  })
-};
+export const updateDict = {
+  "chest" : false,
+  "tricep": false,
+  "delts": false,
+  "lats": false,
+  "traps": false,
+  "quads": false,
+  "glutes": false,
+  "calfs": false,
+  "hamstring": false,
+  "abs": false,
+  "obliques": false,
+}
 
 export const levelCheck = (xpToLevel: number, xpMax: number) => {
   if (xpToLevel >= xpMax) {
@@ -102,3 +88,47 @@ export const checkMuscleLvlUp = (muscleXP: number, xpMax: number) => {
      return false
   }
 }
+
+export const updateStats = async (curUser: User, setUser: (user: User) => void, muscleVal: number, muscleStr: string
+) => {
+  const muscleXP = muscleStr + "XP";
+  let newXP = curUser.statsXP[muscleXP as keyof MuscleGroupXP] + muscleVal;
+  let xpMax = muscleXPMax(curUser.stats[muscleStr as keyof MuscleGroup]);
+  updateDict[muscleStr as keyof typeof updateDict] = true
+
+  //If user didnt level up just update
+  if (checkMuscleLvlUp(newXP, xpMax) == false) {
+    setUser({
+      ...curUser,
+      statsXP: {
+        ...curUser.statsXP,
+        [muscleXP]: newXP,
+      },
+    });
+
+    // database change
+    await updateUserData(muscleXP, newXP);
+  }
+  else{
+    //This levels up the user by 1 if xp is over
+    const newLVL = curUser.stats[muscleStr as keyof MuscleGroup] + 1
+    //This gets the left over xp after level up
+    const remainderXP = newXP % xpMax
+    setUser({
+        ...curUser,
+        stats: {
+          ...curUser.stats,
+          [muscleStr]: newLVL,
+        },
+        statsXP: {
+            ...curUser.statsXP,
+            [muscleXP]: remainderXP,
+        },
+    });
+    await updateUserData(muscleStr, newLVL)
+    await updateUserData(muscleXP, remainderXP)
+    newXP = curUser.statsXP[muscleXP as keyof MuscleGroupXP] + muscleVal;
+    xpMax = muscleXPMax(curUser.stats[muscleStr as keyof MuscleGroup]);
+  }
+
+};

@@ -1,7 +1,8 @@
 import { MuscleGroup, MuscleGroupXP, User } from "../Classes/user.types";
+import { createCalenderTable } from "../database/calenderData";
 import {
   addUser,
-  connectToDatabase, createTables,
+  createTables,
   getUserData, updateUserData
 } from "../database/userData";
 
@@ -58,20 +59,17 @@ export const initDatabase = async ({
   setUser: (curUser: User) => void;
   curUser: User;
 }) => {
-  const db = await connectToDatabase();
-  //await resetDB(curUser);
   await createTables();
+  await createCalenderTable();
+  //await getTable();
   const tempUser = await getUserData();
   if (tempUser != null) {
-    console.log(tempUser);
     setLoading(false);
     setUser(tempUser);
     setAllStats({ curUser: tempUser, setUser: setUser });
   } else {
     await addUser(curUser.username);
-    //await printUserData()
   }
-  //printUserData();
 };
 
 export const muscleXPMax= (muscleLVL: number) => {

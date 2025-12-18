@@ -1,19 +1,14 @@
 import CheckBox from 'expo-checkbox';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Keyboard, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Calendar } from 'react-native-calendars';
+import { WorkoutData } from '../Classes/calender.types';
 import { MuscleGroup, User } from '../Classes/user.types';
+import { setWorkoutData, updateCalender } from '../Helper/calenderHelper';
 import { updateStats } from "../Helper/userHelper";
 import { styles } from '../styles';
 
-// Temp workout data storing till database stuff blah blah blah
-type WorkoutEntry = {
-    muscle: string;
-    sets: string;
-    reps: string;
-    weight: string;
-    timestamp: number;
-};
+
 export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (user: User) => void}) => {
     // Current view state
     const [currView, setCurrView] = useState<Number>(0); // Which screen state is being shown
@@ -26,16 +21,24 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
     const [setsVal, setSetsVal] = useState('');
     const [repsVal, setRepVal] = useState('');
     const [weightVal, setWeightVal] = useState('');
-    const [savedWorkout, setSavedWorkout] = useState('');
+    //const [savedWorkout, setSavedWorkout] = useState('');
 
     // Calendar states
-    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState(() => {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    });
     const [markedDates, setMarkedDates] = useState<{[key: string]: any}>({});
 
     // date as the key
-    const [workoutsByDate, setWorkoutsByDate] = useState<{[key: string]: WorkoutEntry[]}>({});
+    const [workoutsByDate, setWorkoutsByDate] = useState<{[key: string]: WorkoutData[]}>({});
     
-    
+    useEffect(() => {
+        const loadData = async () => {
+          await setWorkoutData(workoutsByDate, setWorkoutsByDate, markedDates, setMarkedDates, selectedDate);
+        };
+        loadData();
+      }, [selectedDate]); //Dependency Array
     
    const renderWorkoutView = () => (
         <View>
@@ -111,8 +114,7 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
 
                         //This needs to move to another file or atleast its own function
                         // mark date on calander
-                        calanderUpdate(muscleString, setsVal, repsVal, weightVal, workoutsByDate, setWorkoutsByDate, markedDates, setMarkedDates)
-
+                        updateCalender(muscleString, setsVal, repsVal, weightVal, workoutsByDate, setWorkoutsByDate, markedDates, setMarkedDates)
                         // Clear all inputs
                         setSetsVal('');
                         setRepVal('');
@@ -136,7 +138,10 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
                 }}
                 markedDates={{
                     ...markedDates,
-                    [selectedDate]: { selected: true, selectedColor: 'lightblue' }
+                    [selectedDate]: { 
+                        selected: true, 
+                        selectedColor: 'lightblue'
+                    }
                 }}
                 theme={{
                     selectedDayBackgroundColor: '#007AFF',
@@ -144,13 +149,12 @@ export const Workout = ({curUser, setCurUser}: {curUser : User, setCurUser : (us
                     arrowColor: '#007AFF',
                 }}
             />
-            
             <View>
                 <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 16 }}>
                     Selected: {selectedDate}
                 </Text>
-
-                {workoutsByDate[selectedDate] && workoutsByDate[selectedDate].length > 0 ? ( // weird ass if statement 
+                {/* If the selected Date is not null and there is something in it*/}
+                {workoutsByDate[selectedDate] && workoutsByDate[selectedDate].length > 0 ? (
                             <ScrollView style={{ maxHeight: 300 }}>
                                 {workoutsByDate[selectedDate].map((workout, index) => (
                                     <View 
@@ -227,91 +231,3 @@ const finalCalc = (sets: string, reps: string, weight: string) => {
 
   // need xp max for muscles
 };
-
-
-/*
-//this needs to be in a new file maybe userHelper or specific file
-const updateStats = async (curUser: User, setUser: (user: User) => void, muscleVal: number, muscleStr: string
-) => {
-  const muscleXP = muscleStr + "XP";
-  let newXP = curUser.statsXP[muscleXP as keyof MuscleGroupXP] + muscleVal;
-  let xpMax = muscleXPMax(curUser.stats[muscleStr as keyof MuscleGroup]);
-  
-  //do{
-  //If user didnt level up just update
-  // stats change
-  if (checkMuscleLvlUp(newXP, xpMax) == false) {
-    setUser({
-      ...curUser,
-      statsXP: {
-        ...curUser.statsXP,
-        [muscleXP]: newXP,
-      },
-    });
-
-    // database change
-    await updateUserData(muscleXP, newXP);
-  }
-  else{
-    //This levels up the user by 1 if xp is over
-    const newLVL = curUser.stats[muscleStr as keyof MuscleGroup] + 1
-    //This gets the left over xp after level up
-    const remainderXP = newXP % xpMax
-    setUser({
-        ...curUser,
-        stats: {
-          ...curUser.stats,
-          [muscleStr]: newLVL,
-        },
-        statsXP: {
-            ...curUser.statsXP,
-            [muscleXP]: remainderXP,
-        },
-    });
-    await updateUserData(muscleStr, newLVL)
-    await updateUserData(muscleXP, remainderXP)
-    newXP = curUser.statsXP[muscleXP as keyof MuscleGroupXP] + muscleVal;
-    xpMax = muscleXPMax(curUser.stats[muscleStr as keyof MuscleGroup]);
-  }
-  //} while(checkMuscleLvlUp(newXP, xpMax) == true)
-};
-*/
-
-const calanderUpdate = (
-    muscleString: string,
-    setsVal: string,
-    repsVal: string,
-    weightVal: string,
-    workoutsByDate: {[key: string]: WorkoutEntry[]},
-    setWorkoutsByDate: (value: {[key: string]: WorkoutEntry[]}) => void,
-    markedDates: {[key: string]: any},
-    setMarkedDates: (value: {[key: string]: any}) => void
-
-) => {
-    const now = new Date();
-    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-
-    // workout entry
-    const entry: WorkoutEntry = {
-        muscle: muscleString,
-        sets: setsVal,
-        reps: repsVal,
-        weight: weightVal,
-        timestamp: Date.now()
-    };
-
-    // setting the date key to input the workout entry
-    const updatedWorkouts = {
-        ...workoutsByDate,
-        [today]: [...(workoutsByDate[today] || []), entry]
-    };
-
-    setWorkoutsByDate(updatedWorkouts)
-
-
-    // setting the date key to place a marker
-    setMarkedDates({
-        ...markedDates,
-        [today]: { marked: true, dotColor: 'green'}
-    });
-}

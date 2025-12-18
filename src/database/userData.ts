@@ -12,7 +12,6 @@ export const removeTable = async () => {
 };
 //Table Name UserData
 export const createTables = async () => {
-  console.log("creating table")
   const userDataQuery = `
     CREATE TABLE IF NOT EXISTS UserData (
         id INTEGER DEFAULT 1,
@@ -73,7 +72,7 @@ export const updateUserData = async (columnName: string, newValue: number) => {
     `;
   try {
     //The [newValue] will be used where the ? at
-    return db.runAsync(query, [newValue]);
+    db.runAsync(query, [newValue]);
   } catch (error) {
     console.log(error);
     throw Error("Failed to updated user info");
@@ -87,7 +86,8 @@ export const getTable = async () => {
 
     const results = await db.getAllAsync(`
       SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'`);
-  } catch (error) {
+    console.log(results)
+    } catch (error) {
     console.error(error);
     throw Error("Failed to get table from db");
   }
@@ -181,7 +181,6 @@ export const getUserData = async (): Promise<User | null> => {
 //This doenst need to run more than once just to get the player in
 export const addUser = async (username: string) => {
   //const constanttMult = 2.39;
-  console.log("adding user")
   try {
     const userResults = await getUserData();
     if (userResults == null) {

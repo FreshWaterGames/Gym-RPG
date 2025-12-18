@@ -90,16 +90,13 @@ export const setWorkoutData = async(
         weight: String(row.weight),
         timestamp: new Date(row.date).getTime()
     }))
-    console.log("\n\nnew Set: \n\n",newSet)
-    
-    // Update marked dates
+
     const newMarkedDates = { ...markedDates };
     results.forEach((sqlDate: any) => {
         newMarkedDates[sqlDate.date] = { marked: true, dotColor: 'green' };
     });
     setMarkedDates(newMarkedDates);
 
-    // Update workouts by date
     setWorkoutsByDate({
         ...workoutByDate,
         [dateStr]: newSet

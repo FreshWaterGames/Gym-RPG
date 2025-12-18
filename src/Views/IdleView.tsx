@@ -175,7 +175,7 @@ const updateGold = async ({
     }
     */
     const newGold = curMonster.level * 5 + curUser.gold;
-    console.log(`gold: ${newGold}`);
+    //console.log(`gold: ${newGold}`);
     //Need to make this a helper function
     updateUserData("gold", newGold);
     setCurUser({

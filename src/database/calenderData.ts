@@ -87,3 +87,11 @@ export const getWorkoutByDate = async(dateStr: string) => {
 export const getCalData = async() => {
     return db.getAllAsync("SELECT * FROM CalenderData")
 }
+
+export const resetCalender = async() => {
+    const queryData = `
+        DROP TABLE CalenderData
+    `
+    db.getAllAsync(queryData)
+    await createCalenderTable()
+}

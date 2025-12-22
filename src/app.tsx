@@ -8,11 +8,11 @@ import {
   removeTable
 } from "./database/userData";
 import { initDatabase } from "./Helper/userHelper";
-import { styles } from "./styles";
+import { tabBarStyles } from "./styles";
 import { IdleView } from "./Views/IdleView";
 import { SettingsView } from "./Views/SettingsView";
-import { Stats } from "./Views/StatsView";
-import { Workout } from "./Views/WorkoutView";
+import { Stats2 } from "./Views/Stats2";
+import { Workout2 } from "./Views/Workout2";
 
 //Test User
 const TEMP_USER: User = {
@@ -67,10 +67,10 @@ const App = () => {
     switch (curView) {
       case 0:
         if (isLoading == false) {
-          return <Stats curUser={curUser} setCurUser={setUser} />;
+          return <Stats2 curUser={curUser} setCurUser={setUser} />;
         }
       case 1:
-        return <Workout curUser={curUser} setCurUser={setUser} />;
+        return <Workout2 curUser={curUser} setCurUser={setUser} />;
       case 2:
         return <IdleView curUser={curUser} setCurUser={setUser} />;
       case 3:
@@ -96,30 +96,50 @@ const App = () => {
   return (
     <View style={{ flex: 1 }}>
       {renderView()}
-      <TabBar setCurView={setView} />
+      <TabBar setCurView={setView}  curView={curView}/>
     </View>
   );
 };
 
 export const TabBar = ({
   setCurView,
+  curView,
 }: {
   setCurView: (curView: number) => void;
+  curView: number;
 }) => {
+  const tabs = [
+    { id: 0, label: "Stats", icon: "📊" },
+    { id: 1, label: "Workout", icon: "💪" },
+    { id: 2, label: "Idle", icon: "⚡" },
+    { id: 3, label: "Settings", icon: "⚙️" },
+  ];
+
   return (
-    <View style={styles.tabs}>
-      <TouchableOpacity style={styles.tabsButton} onPress={() => setCurView(0)}>
-        <Text style={styles.tabsButtonTxt}>Stats</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.tabsButton} onPress={() => setCurView(1)}>
-        <Text style={styles.tabsButtonTxt}>Workout</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.tabsButton} onPress={() => setCurView(2)}>
-        <Text style={styles.tabsButtonTxt}>Idle</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.tabsButton} onPress={() => setCurView(3)}>
-        <Text style={styles.tabsButtonTxt}>Settings</Text>
-      </TouchableOpacity>
+    <View style={tabBarStyles.container}>
+      <View style={tabBarStyles.tabBar}>
+        {tabs.map((tab) => (
+          <TouchableOpacity
+            key={tab.id}
+            style={[
+              tabBarStyles.tab,
+              curView === tab.id && tabBarStyles.tabActive,
+            ]}
+            onPress={() => setCurView(tab.id)}
+            activeOpacity={0.7}
+          >
+            <Text style={tabBarStyles.tabIcon}>{tab.icon}</Text>
+            <Text
+              style={[
+                tabBarStyles.tabText,
+                curView === tab.id && tabBarStyles.tabTextActive,
+              ]}
+            >
+              {tab.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };

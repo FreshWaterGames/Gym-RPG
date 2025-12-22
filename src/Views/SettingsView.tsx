@@ -1,10 +1,11 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { User } from "../Classes/user.types";
+import { resetCalender } from "../database/calenderData";
 import {
-    addUser,
-    getUserData,
-    removeAllUsers
+  addUser,
+  getUserData,
+  removeAllUsers
 } from "../database/userData";
 import { styles } from "../styles";
 
@@ -16,7 +17,9 @@ export const SettingsView = ({
   setUser: (curUser: User) => void;
 }) => {
   return (
-    <View>
+    <View style={{
+      flexDirection: "row",
+    }}>
       <TouchableOpacity
         style={styles.tabsButton}
         onPress={async () => {
@@ -28,7 +31,21 @@ export const SettingsView = ({
           }
         }}
       >
-        <Text style={styles.tabsButtonTxt}>Reset</Text>
+        <Text style={styles.tabsButtonTxt}>Reset Player</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.tabsButton}
+        onPress={async () => {
+          try {
+            await resetCalenderBTN();
+            //console.log("After Press");
+          } catch (error) {
+            console.log(error);
+          }
+        }}
+      >
+        <Text style={styles.tabsButtonTxt}>Reset Calender</Text>
       </TouchableOpacity>
     </View>
   );
@@ -52,3 +69,8 @@ const resetUser = async ({
     console.log("Could not set User");
   }
 };
+
+
+const resetCalenderBTN = async() => {
+  await resetCalender()
+}

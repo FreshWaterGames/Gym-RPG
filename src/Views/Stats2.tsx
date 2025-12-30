@@ -79,7 +79,7 @@ export const Stats2 = ({
             const curMuscleXPMax = muscleXPMax(curUser.stats[muscleName as keyof MuscleGroup]);
             const muscleXPStr = muscleName + "XP";
             const curXP = curUser.statsXP[muscleXPStr as keyof MuscleGroupXP];
-            const xpWidth = (curXP / curMuscleXPMax) * 100;
+            const xpWidth = (curXP / curMuscleXPMax) * 100; // gets percentage
 
             return (
               <View key={muscleName} style={enhancedStatsStyles.muscleCard}>
@@ -105,12 +105,6 @@ export const Stats2 = ({
                     </Text>
                   </View>
                   
-                  <View style={enhancedStatsStyles.progressIndicator}>
-                    <View style={enhancedStatsStyles.progressDot} />
-                    <Text style={enhancedStatsStyles.progressPercent}>
-                      {Math.round(xpWidth)}%
-                    </Text>
-                  </View>
                 </View>
               </View>
             );

@@ -32,6 +32,8 @@ export const Workout2 = ({curUser, setCurUser}: {curUser : User, setCurUser : (u
         loadData();
     }, [selectedDate]);
 
+
+    // does this work?
     useEffect(() => {
         Animated.spring(slideAnim, {
             toValue: currView,

@@ -24,6 +24,7 @@ const TEMP_USER: User = {
   attackStat: 1,
   curMuscleXP: 1,
   gold: 0, 
+  skillpoint: 0,
   stats: {
     chest: 1,
     bicep: 17,

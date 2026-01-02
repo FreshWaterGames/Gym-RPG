@@ -23,6 +23,7 @@ export const createTables = async () => {
         attackStat INTEGER,
         health INTEGER,
         gold INTEGER,
+        skillpoint INTEGER,
         
         -- Muscle Base Stats
         chest INTEGER,
@@ -136,6 +137,7 @@ export const getUserData = async (): Promise<User | null> => {
       attackStat: userFromDB.attackStat,
       curMuscleXP: userFromDB.curMuscleXP,
       gold: userFromDB.gold,
+      skillpoint: userFromDB.skillpoint,
 
 
       stats: {
@@ -187,19 +189,23 @@ export const addUser = async (username: string) => {
       console.log("userResults is null")
       //Freaking mathx
       //const xpMax = Math.pow(1/constanttMult, 2)
-      const sql = `INSERT OR IGNORE INTO UserData (
-        username, level, curMuscleXP, xpToLevel, xpMax, attackStat, health, gold,
-        chest, bicep, tricep, delts, lats, traps,
-        quads, glutes, calfs, hamstring, abs, obliques,
-        chestXP, bicepXP, tricepXP, deltsXP, latsXP, trapsXP,
-        quadsXP, glutesXP, calfsXP, hamstringXP, absXP, obliquesXP
-      ) VALUES (?, 1, 0, 0, 100, 1, 1, 0,  -- User Stuff 
-                1, 1, 1, 1, 1, 1,       -- First row of muslces
-                1, 1, 1, 1, 1, 1,       -- Second row of Muscles
-                0, 0, 0, 0, 0, 0,       -- First row of xp
-                0, 0, 0, 0, 0, 0)       -- Second row of xp`; 
-      const result = await db.runAsync(sql, [username]);
-      return result.lastInsertRowId;
+      const sql = `
+  INSERT OR IGNORE INTO UserData (
+    username, level, curMuscleXP, xpToLevel, xpMax, attackStat, health, gold, skillpoint,
+    chest, bicep, tricep, delts, lats, traps,
+    quads, glutes, calfs, hamstring, abs, obliques,
+    chestXP, bicepXP, tricepXP, deltsXP, latsXP, trapsXP,
+    quadsXP, glutesXP, calfsXP, hamstringXP, absXP, obliquesXP
+  ) VALUES (
+    ?, 1, 0, 0, 100, 1, 1, 0, 0, 
+    1, 1, 1, 1, 1, 1,            
+    1, 1, 1, 1, 1, 1,            
+    0, 0, 0, 0, 0, 0,            
+    0, 0, 0, 0, 0, 0
+  )
+`; 
+const result = await db.runAsync(sql, [username]);
+return result.lastInsertRowId;
     } else {
       console.log("User is not null Womp Womp");
     }

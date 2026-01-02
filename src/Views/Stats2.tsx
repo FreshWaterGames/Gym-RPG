@@ -45,6 +45,14 @@ export const Stats2 = ({
                 />
                 <Text style={enhancedStatsStyles.statValue}>{curUser.gold}</Text>
               </View>
+
+              <View style={enhancedStatsStyles.statPill}>
+                <Image 
+                  source={require("../assets/images/skills_icon.jpg")}
+                  style={enhancedStatsStyles.coinIcon}
+                />
+                <Text style={enhancedStatsStyles.statValue}>{curUser.skillpoint}</Text>
+              </View>
             </View>
 
             {/* XP Bar */}
